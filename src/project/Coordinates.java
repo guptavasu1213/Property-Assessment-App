@@ -8,23 +8,34 @@ package project;
 import java.math.BigDecimal;
 
 /**
- *
+ * Coordinates class contains the longitude and latitude of the property
  * @author vasug
  */
 class Coordinates {
     private BigDecimal _latitude;
     private BigDecimal _longitude;    
 
-    // Constructor
+    /**
+     * Constructor for Coordinate class
+     * @param latitude Latitude of property
+     * @param longitude Longitude of property
+     */
     public Coordinates(BigDecimal latitude, BigDecimal longitude){
         this._latitude = latitude;
         this._longitude = longitude;
     }
     
-    // Getters
+    /**
+     * Getter for latitude
+     * @return Latitude of property
+     */
     public BigDecimal getLatitude(){
         return _latitude;
     }
+    /**
+     * Getter for latitude
+     * @return Longitude of property
+     */
     public BigDecimal getLongitude(){
         return _longitude;
     }

@@ -19,13 +19,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * This class contains the list of records importing them from the specified
+ * .csv file. After importing, 
  * @author vasug
  */
 public class Project {
     private ArrayList<Record> records = new ArrayList<>();
 
-    // Takes input from user and assigns the file name accordingly
+    /**
+     * Prompts the user for the file name and returns back the name. 
+     * If no file name is specified, the default file is chosen.
+     * @return File name 
+     */
     public String getFileName() {
         Scanner console = new Scanner(System.in);  
         System.out.print("CSV filename [press enter for default file]: ");
@@ -37,8 +42,25 @@ public class Project {
         }
         return fileName;
     }
-    
-    // Getting the Long value from the Scanner object
+    /**
+     * Getting the String value from the Scanner object
+     * @param csvReader Scanner object
+     * @return String value if the field has a valid string value; 
+     * @return null if the field is empty
+     */
+    private String getString(Scanner csvReader){
+        String tmpStr = csvReader.next().trim();
+        if (tmpStr.isEmpty()){
+            return null;         
+        }
+        return tmpStr;
+    }    
+    /**
+     * Getting the Long value from the Scanner object
+     * @param csvReader Scanner object
+     * @return Long value if the field has a valid long value; 
+     * @return null if the field does not have a long value
+     */
     private Long getLong(Scanner csvReader){
         if (csvReader.hasNextLong()){
             return (csvReader.nextLong());
@@ -46,15 +68,12 @@ public class Project {
         csvReader.next(); // Ignoring the value
         return null; 
     }
-    // Getting the String value from the Scanner object
-    private String getString(Scanner csvReader){
-        String tmpStr = csvReader.next().trim();
-        if (tmpStr.isEmpty()){
-            return null;         
-        }
-        return tmpStr;
-    }
-    // Getting the Integer value from the Scanner object
+    /**
+     * Getting the Integer value from the Scanner object
+     * @param csvReader Scanner object
+     * @return Integer value if the field has a valid Integer value;
+     * @return null if the field does not have a long value
+     */ 
     private Integer getInt(Scanner csvReader){
         if (csvReader.hasNextInt()){
             return (csvReader.nextInt());
@@ -62,7 +81,12 @@ public class Project {
         csvReader.next(); // Ignoring the value
         return null; 
     }
-    // Getting the BigDecimal value from the Scanner object
+    /**
+     * Getting the BidDecimal value from the Scanner object
+     * @param csvReader Scanner object
+     * @return BigDecimal value if the field has a valid BigDecimalvalue;
+     * @return null if the field does not have a long value
+     */ 
     private BigDecimal getBigDecimal(Scanner csvReader){
         if (csvReader.hasNextBigDecimal()){
             return (csvReader.nextBigDecimal());
@@ -101,22 +125,29 @@ public class Project {
         }
         csvReader.close();
     }
-    
-    // Calculates the number of records in the file
-    private int countRecords(ArrayList<Long> assessedVals){
-        return assessedVals.size();
-    }
-    
-    // Minimum value in the array list
+        
+    /**
+     * Calculates the minimum value in the list
+     * @param assessedVals The ArrayList of assessed values
+     * @return Minimum value in the list
+     */
     private long minAssessedVal(ArrayList<Long> assessedVals){
         return Collections.min(assessedVals);
     }
-    // Maximum value in the array list
+    /**
+     * Calculates the maximum value in the list
+     * @param assessedVals The ArrayList of assessed values
+     * @return Maximum value in the list
+     */
     private long maxAssessedVal(ArrayList<Long> assessedVals){
         return Collections.max(assessedVals);
     }
     
-    // Average
+    /**
+     * Calculates the mean of the values in the list in high precision
+     * @param assessedVals The ArrayList of assessed values
+     * @return Mean of the values
+     */
     private BigDecimal calcMean(ArrayList<Long> assessedVals){
         BigDecimal sum = new BigDecimal("0");
         BigDecimal tmp;
@@ -128,6 +159,12 @@ public class Project {
     }
     
     // Calculating standard deviation
+    /**
+     * Calculates the standard deviation of the values in the list
+     * @param assessedVals The ArrayList of assessed values
+     * @param mean Mean of the values in the ArrayList
+     * @return Standard deviation of the values
+     */
     private double calcStandardDeviation(ArrayList<Long> assessedVals, BigDecimal mean){
         BigDecimal standardDeviation = new BigDecimal("0.0");
         for (Long val : assessedVals) {
@@ -136,8 +173,11 @@ public class Project {
         standardDeviation = standardDeviation.divide(new BigDecimal(BigInteger.valueOf(assessedVals.size()-1)), 5);
         return Math.sqrt(standardDeviation.doubleValue());
     }
-    
-    // Calculating median
+    /**
+     * Calculating the median of the values in the ArrayList
+     * @param assessedVals The ArrayList of assessed values
+     * @return Median of values
+     */
     private double calculateMedian(ArrayList<Long> assessedVals){
         Collections.sort(assessedVals);
         int n = assessedVals.size();
@@ -147,7 +187,14 @@ public class Project {
         } // Odd case
         return (double)(assessedVals.get((n-1)/2) + assessedVals.get(n/2)) / 2.0;         
     }
-    // Calculates the parameters for the statistics
+    
+    /**
+     * Facilitates the calculation of min, max, range, mean, median, and 
+     * standard deviation of the values in the ArrayList
+     * @param assessedVals The ArrayList of assessed values
+     * @return A list of the calculated min, max, range, mean, median, and 
+     * standard deviation 
+     */
     private List<Object> calculateStats(ArrayList<Long> assessedVals){
         Long min = this.minAssessedVal(assessedVals);
         Long max = this.maxAssessedVal(assessedVals);
@@ -158,7 +205,16 @@ public class Project {
         
         return Arrays.asList(min, max, range, mean, std_dev, median);
     }
-    // Displays all the parameters for the statistics
+    /**
+     * Prints the statistics on the console
+     * @param n Number of values in the list
+     * @param min Minimum value in the list
+     * @param max Maximum value in the list
+     * @param range Range of values in the list
+     * @param mean Mean of the values in the list
+     * @param std_dev Standard deviation of the values in the list
+     * @param median Median of the values in the list
+     */
     private void displayStats(long n, long min, long max, long range,
                               BigDecimal mean, double std_dev, double median){
         System.out.println("n: " + n +
@@ -169,8 +225,11 @@ public class Project {
                 "\nStd Deviation: " + (long) std_dev +
                 "\nMedian: " + (long) median + "\n");
     }
-    
-    // Calculates and displays the stats for all the records in the file
+
+    /**
+     * Facilitates the calculation of statistics of all the records and 
+     * displaying them on the console 
+     */
     public void allRecordsStats(){
         // Building an array of Assessed Values
         ArrayList<Long> assessedVals = new ArrayList<>(records.size());
@@ -187,36 +246,11 @@ public class Project {
                 (BigDecimal) calculatedStats.get(3), (double) calculatedStats.get(4),
                 (double) calculatedStats.get(5));
     }
-    
-    // Looks for the user specified account and displays information
-    public void findPropertyByAccount(){
-        // User input for Account Number
-        Scanner console = new Scanner(System.in);  
-        System.out.print("Find a property assessment by account number: ");
-        long userAccNo = console.nextLong();
-        
-        // Displaying the information of the user requested account
-        for (Record record : records) {
-            if (record.getAccNum() == userAccNo){ // match
-                // CHECK FOR NULLLLLLL====================
-                System.out.println("\nAccount Number = " + record.getAccNum() +
-                        "\nAddress = " + record.getAddress().getSuite() + " " + 
-                            record.getAddress().getHouseNum() + " " + record.getAddress().getStreetName() + 
-                        "\nAssessed value = $" + (double) record.getAssessedVal() +
-                        "\nAssessment class = " + record.getNeighbourhood().getAssessmentClass() +
-                        "\nNeighbourhood = " + record.getNeighbourhood().getName() + 
-                                             " (" + record.getNeighbourhood().getWardName() + ")" +
-                        "\nLocation = (" + record.getCoordinates().getLongitude() + ", " + 
-                            record.getCoordinates().getLatitude() + ")");
-            return;
-            }
-        }
-        // When account does not exist
-        System.out.println("\nSorry, couldn't find the account with the account" + 
-                " number " + userAccNo + ".");
-    }
-    
-    // Calculates and displays the stats for user defined neighbourhood
+    /**
+     * Prompts the user for a neighbourhood name and facilitates the calculation 
+     * of statistics of all the records associated with the user specified 
+     * neighbourhood and displaying them on the console 
+     */
     public void neighbourhoodStats(){
         // User input for Neighbourhood Name
         Scanner console = new Scanner(System.in);  
@@ -246,7 +280,11 @@ public class Project {
                 (BigDecimal) calculatedStats.get(3), (double) calculatedStats.get(4),
                 (double) calculatedStats.get(5));
     }
-    // Calculates and displays the stats for all the user specified assessed values
+    /**
+     * Prompts the user for an Assessment Class and facilitates the calculation 
+     * of statistics of all the records associated with the user specified 
+     * assessedClass in a neighbourhood and displaying them on the console 
+     */
     public void assessmentClassStats(){
         // User input for Assessment Class Name
         Scanner console = new Scanner(System.in);  
@@ -267,7 +305,6 @@ public class Project {
             System.out.println("\nCould not find a Assessment class with the given name.");
             return;
         }
-        
         // Calculating stats
         List<Object> calculatedStats = calculateStats(assessedVals);
         // Displaying stats
@@ -277,4 +314,37 @@ public class Project {
                 (BigDecimal) calculatedStats.get(3), (double) calculatedStats.get(4),
                 (double) calculatedStats.get(5));
     }
+    /**
+     * Prompts the user for an account number and displays the account number,
+     * address, assessed value, assessment class, neighbourhood information, and
+     * the coordinated of the property associated with it. 
+     * Displays an error message if the account number is not found.
+     */
+    public void findPropertyByAccount(){
+        // User input for Account Number
+        Scanner console = new Scanner(System.in);  
+        System.out.print("Find a property assessment by account number: ");
+        long userAccNo = console.nextLong();
+        
+        // Displaying the information of the user requested account
+        for (Record record : records) {
+            if (record.getAccNum() == userAccNo){ // match
+                // CHECK FOR NULLLLLLL====================
+                System.out.println("\nAccount Number = " + record.getAccNum() +
+                        "\nAddress = " + record.getAddress().getSuite() + " " + 
+                            record.getAddress().getHouseNum() + " " + record.getAddress().getStreetName() + 
+                        "\nAssessed value = $" + (double) record.getAssessedVal() +
+                        "\nAssessment class = " + record.getNeighbourhood().getAssessmentClass() +
+                        "\nNeighbourhood = " + record.getNeighbourhood().getName() + 
+                                             " (" + record.getNeighbourhood().getWardName() + ")" +
+                        "\nLocation = (" + record.getCoordinates().getLongitude() + ", " + 
+                            record.getCoordinates().getLatitude() + ")");
+            return;
+            }
+        }
+        // When account does not exist
+        System.out.println("\nSorry, couldn't find the account with the account" + 
+                " number " + userAccNo + ".");
+    }
+
 }

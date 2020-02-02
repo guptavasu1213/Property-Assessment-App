@@ -6,7 +6,8 @@
 package project;
 
 /**
- *
+ * Address class contains the suite number, house number and the street name
+ * of the property
  * @author vasug
  */
 public class Address {
@@ -14,19 +15,35 @@ public class Address {
     private Integer _houseNum;
     private String _streetName;
     
-    // Constructor
+    /**
+     * Constructor for Address class
+     * @param suite Suite number 
+     * @param houseNum House number 
+     * @param streetName Street name
+     */
     public Address(String suite, Integer houseNum, String streetName){
         this._suite = suite;
         this._houseNum = houseNum;
         this._streetName = streetName;
     }
-    // Getters
+    /**
+     * Getter for house number 
+     * @return house number
+     */
     public Integer getHouseNum(){
         return _houseNum;
     }
+    /**
+     * Getter for suite name
+     * @return suite name
+     */
     public String getSuite(){
         return _suite;
     }
+    /**
+     * Getter for street name 
+     * @return street name
+     */
     public String getStreetName(){
         return _streetName;
     }

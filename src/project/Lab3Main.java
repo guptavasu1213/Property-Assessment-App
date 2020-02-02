@@ -6,7 +6,7 @@
 package project;
 
 /**
- *
+ * This is the driver class for the project
  * @author vasug
  */
 public class Lab3Main {
