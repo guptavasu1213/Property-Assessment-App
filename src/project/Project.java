@@ -48,7 +48,7 @@ public class Project {
      * @return String value if the field has a valid string value; 
      * @return null if the field is empty
      */
-    private String getString(Scanner csvReader){
+    public String getString(Scanner csvReader){
         String tmpStr = csvReader.next().trim();
         if (tmpStr.isEmpty()){
             return null;         
@@ -61,7 +61,7 @@ public class Project {
      * @return Long value if the field has a valid long value; 
      * @return null if the field does not have a long value
      */
-    private Long getLong(Scanner csvReader){
+    public Long getLong(Scanner csvReader){
         if (csvReader.hasNextLong()){
             return (csvReader.nextLong());
         }
@@ -74,7 +74,7 @@ public class Project {
      * @return Integer value if the field has a valid Integer value;
      * @return null if the field does not have a long value
      */ 
-    private Integer getInt(Scanner csvReader){
+    public Integer getInt(Scanner csvReader){
         if (csvReader.hasNextInt()){
             return (csvReader.nextInt());
         }
@@ -87,7 +87,7 @@ public class Project {
      * @return BigDecimal value if the field has a valid BigDecimalvalue;
      * @return null if the field does not have a long value
      */ 
-    private BigDecimal getBigDecimal(Scanner csvReader){
+    public BigDecimal getBigDecimal(Scanner csvReader){
         if (csvReader.hasNextBigDecimal()){
             return (csvReader.nextBigDecimal());
         }
@@ -131,7 +131,7 @@ public class Project {
      * @param assessedVals The ArrayList of assessed values
      * @return Minimum value in the list
      */
-    private long minAssessedVal(ArrayList<Long> assessedVals){
+    public long minAssessedVal(ArrayList<Long> assessedVals){
         return Collections.min(assessedVals);
     }
     /**
@@ -139,7 +139,7 @@ public class Project {
      * @param assessedVals The ArrayList of assessed values
      * @return Maximum value in the list
      */
-    private long maxAssessedVal(ArrayList<Long> assessedVals){
+    public long maxAssessedVal(ArrayList<Long> assessedVals){
         return Collections.max(assessedVals);
     }
     
@@ -148,7 +148,7 @@ public class Project {
      * @param assessedVals The ArrayList of assessed values
      * @return Mean of the values
      */
-    private BigDecimal calcMean(ArrayList<Long> assessedVals){
+    public BigDecimal calcMean(ArrayList<Long> assessedVals){
         BigDecimal sum = new BigDecimal("0");
         BigDecimal tmp;
         for (Long val : assessedVals){
@@ -165,7 +165,7 @@ public class Project {
      * @param mean Mean of the values in the ArrayList
      * @return Standard deviation of the values
      */
-    private double calcStandardDeviation(ArrayList<Long> assessedVals, BigDecimal mean){
+    public double calcStandardDeviation(ArrayList<Long> assessedVals, BigDecimal mean){
         BigDecimal standardDeviation = new BigDecimal("0.0");
         for (Long val : assessedVals) {
             standardDeviation = standardDeviation.add((BigDecimal.valueOf(val).subtract(mean)).pow(2));
@@ -178,7 +178,7 @@ public class Project {
      * @param assessedVals The ArrayList of assessed values
      * @return Median of values
      */
-    private double calculateMedian(ArrayList<Long> assessedVals){
+    public double calculateMedian(ArrayList<Long> assessedVals){
         Collections.sort(assessedVals);
         int n = assessedVals.size();
         // Check for even case
@@ -195,7 +195,7 @@ public class Project {
      * @return A list of the calculated min, max, range, mean, median, and 
      * standard deviation 
      */
-    private List<Object> calculateStats(ArrayList<Long> assessedVals){
+    public List<Object> calculateStats(ArrayList<Long> assessedVals){
         Long min = this.minAssessedVal(assessedVals);
         Long max = this.maxAssessedVal(assessedVals);
         Long range = max - min; 
