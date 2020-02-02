@@ -16,7 +16,6 @@ public class Lab3Main {
         
         lab3.setUpRecords(fileName);    
         
-        // 
         lab3.assessmentClassStats();
     }    
 }
