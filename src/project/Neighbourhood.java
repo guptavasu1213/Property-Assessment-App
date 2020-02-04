@@ -25,7 +25,8 @@ class Neighbourhood {
      * @param wardName Ward name/number
      * @author vasug
      */
-    public Neighbourhood(String assessmentClass, Integer neighbourhoodID, String neighbourhoodName, String wardName){
+    public Neighbourhood(String assessmentClass, Integer neighbourhoodID, 
+            String neighbourhoodName, String wardName){
         this._assessmentClass = assessmentClass;
         this._ID = neighbourhoodID;
         this._Name = neighbourhoodName;
