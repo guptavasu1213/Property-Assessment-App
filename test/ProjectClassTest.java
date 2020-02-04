@@ -7,12 +7,11 @@
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import project.Project; 
 /**
- *
+ * 
  * @author vasug
  */
 public class ProjectClassTest {
@@ -20,10 +19,6 @@ public class ProjectClassTest {
     
     private Project proj = new Project();
     
-    @BeforeClass
-    public static void setUpClass() {
-        
-    }
     // Populating the array with own values
     @Before
     public void setUp() {
