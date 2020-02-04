@@ -6,31 +6,25 @@
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import project.Project; 
-import project.Record;
 /**
  *
  * @author vasug
  */
 public class ProjectClassTest {
-    private ArrayList<Record> records = new ArrayList<>();
     private ArrayList<Long> vals = new ArrayList<>();
     
     private Project proj = new Project();
-    
-    public ProjectClassTest() {
-    }
     
     @BeforeClass
     public static void setUpClass() {
         
     }
+    // Populating the array with own values
     @Before
     public void setUp() {
         vals.add((long) 1);
@@ -39,12 +33,7 @@ public class ProjectClassTest {
         vals.add((long) 4);
         vals.add((long) 5);
         vals.add((long) 6);        
-    }
-    
-    // HOW DO I TEST?
-    //  getFileName()
-    // getString, long, ...
-    
+    }    
     
     @Test
     public void minAssessedValTest(){
