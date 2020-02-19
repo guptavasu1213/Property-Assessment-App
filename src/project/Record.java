@@ -68,10 +68,23 @@ public class Record {
     public Coordinates getCoordinates(){
         return _coordinates;
     }
-    
-    // Constructor ================????????
-    public Record() {
-        this._accNum = null;
+
+    /**
+     * Checks if the class has all attributes set to null
+     * @return True when all attributes and sub-attributes are null
+     */    
+    public boolean isEmpty(){
+        return this._accNum == null && this._assessedVal == null && 
+                this._garagePresent == null &&
+                this._address.getHouseNum() == null && 
+                this._address.getStreetName() == null &&
+                this._address.getSuite() == null &&
+                this._coordinates.getLatitude() == null &&
+                this._coordinates.getLongitude() == null &&
+                this._neighbourhoodInfo.getAssessmentClass() == null &&
+                this._neighbourhoodInfo.getID() == null &&
+                this._neighbourhoodInfo.getName() == null &&
+                this._neighbourhoodInfo.getWardName() == null;
     }
     
     /**
@@ -93,7 +106,7 @@ public class Record {
             Long assessedVal, String assessmentClass, Integer neighbourhoodID, 
             String neighbourhoodName, String wardName, String garagePresent, 
             BigDecimal latitude, BigDecimal longitude){
-
+        
         this._accNum = accNum;
         this._assessedVal = assessedVal;
         this._garagePresent = garagePresent;

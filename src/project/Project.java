@@ -15,8 +15,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class contains the list of records importing them from the specified
@@ -91,7 +89,7 @@ public class Project {
         if (csvReader.hasNextBigDecimal()){
             return (csvReader.nextBigDecimal());
         }
-        csvReader.next(); // Ignoring the value
+//        csvReader.next(); // Ignoring the value
         return null; 
     }    
     
@@ -100,7 +98,7 @@ public class Project {
         try {
             csvReader = new Scanner(Paths.get(fileName));
         } catch (IOException ex) {
-            Logger.getLogger(Project.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("\nFile Not Found.\nProgram Terminated.\n");
             System.exit(1); // Terminate program
         }
 
@@ -119,13 +117,17 @@ public class Project {
                     getString(csvReader), getInt(csvReader), getString(csvReader),
                     getString(csvReader), getString(csvReader), 
                     getBigDecimal(csvReader), getBigDecimal(csvReader));
-
+            
+            if (temp.isEmpty()){ // When all attributes of temp are not null
+                csvReader.nextLine();
+                continue;
+            }
             records.add(temp);
             csvReader.nextLine(); // Skips over the "\r\n" at the end of each line
         }
         csvReader.close();
     }
-        
+    
     /**
      * Calculates the minimum value in the list
      * @param assessedVals The ArrayList of assessed values
@@ -329,7 +331,6 @@ public class Project {
         // Displaying the information of the user requested account
         for (Record record : records) {
             if (record.getAccNum() == userAccNo){ // match
-                // CHECK FOR NULLLLLLL====================
                 System.out.println("\nAccount Number = " + record.getAccNum() +
                         "\nAddress = " + record.getAddress().getSuite() + " " + 
                             record.getAddress().getHouseNum() + " " + record.getAddress().getStreetName() + 
