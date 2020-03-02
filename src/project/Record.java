@@ -16,13 +16,14 @@ import java.math.BigDecimal;
  * @author vasug
  */
 public class Record {
-    private final Long _accNum;
-    private Long _assessedVal;    
-    private String _garagePresent; 
+    private final Long accNum;
+    private Long assessedVal;    
+    private String garagePresent; 
+    private String assessmentClass;
     
-    private Address _address;
-    private Neighbourhood _neighbourhoodInfo;        
-    private Coordinates _coordinates;
+    private Address address;
+    private Neighbourhood neighbourhoodInfo;        
+    private Coordinates coordinates;
     
     
     /**
@@ -30,43 +31,45 @@ public class Record {
      * @return Account number
      */
     public Long getAccNum(){
-        return _accNum;
+        return accNum;
     }
     /**
      * Getter for assessed value
      * @return Assessed value
      */
     public Long getAssessedVal(){
-        return _assessedVal;
+        return assessedVal;
     }
     /**
      * Getter for garage presence. Either "Y" or "N"
      * @return "Y" or "N"
      */
     public String getGarageStatus(){
-        return _garagePresent;
+        return garagePresent;
     }
     /**
      * Getter for Address object
      * @return Address object
      */
     public Address getAddress(){
-        return _address;
+        return address;
     }
     /**
      * Getter for Neighbourhood object
      * @return Neighbourhood object
      */    
-    public Neighbourhood getNeighbourhood(){
-        return _neighbourhoodInfo;
+    public Neighbourhood getNeighbourhoodInfo(){
+        return neighbourhoodInfo;
     }
-    
+    public String getAssessmentClass(){
+        return assessmentClass;
+    }
     /**
      * Getter for Coordinates object
      * @return Coordinates objects
      */
     public Coordinates getCoordinates(){
-        return _coordinates;
+        return coordinates;
     }
 
     /**
@@ -74,17 +77,17 @@ public class Record {
      * @return True when all attributes and sub-attributes are null
      */    
     public boolean isEmpty(){
-        return this._accNum == null && this._assessedVal == null && 
-                this._garagePresent == null &&
-                this._address.getHouseNum() == null && 
-                this._address.getStreetName() == null &&
-                this._address.getSuite() == null &&
-                this._coordinates.getLatitude() == null &&
-                this._coordinates.getLongitude() == null &&
-                this._neighbourhoodInfo.getAssessmentClass() == null &&
-                this._neighbourhoodInfo.getID() == null &&
-                this._neighbourhoodInfo.getName() == null &&
-                this._neighbourhoodInfo.getWardName() == null;
+        return this.accNum == null && this.assessedVal == null && 
+                this.garagePresent == null &&
+                this.address.getHouseNum() == null && 
+                this.address.getStreetName() == null &&
+                this.address.getSuite() == null &&
+                this.coordinates.getLatitude() == null &&
+                this.coordinates.getLongitude() == null &&
+                this.assessmentClass == null &&
+                this.neighbourhoodInfo.getID() == null &&
+                this.neighbourhoodInfo.getName() == null &&
+                this.neighbourhoodInfo.getWardName() == null;
     }
     
     /**
@@ -107,16 +110,16 @@ public class Record {
             String neighbourhoodName, String wardName, String garagePresent, 
             BigDecimal latitude, BigDecimal longitude){
         
-        this._accNum = accNum;
-        this._assessedVal = assessedVal;
-        this._garagePresent = garagePresent;
-
-        this._address = new Address(suite, houseNum, streetName);
-        this._neighbourhoodInfo = new Neighbourhood(assessmentClass,
-            neighbourhoodID, neighbourhoodName, wardName);
-        this._coordinates = new Coordinates(latitude, longitude);
-    }
-    
+        this.accNum = accNum;
+        this.assessedVal = assessedVal;
+        this.garagePresent = garagePresent;
+        this.assessmentClass = assessmentClass;
+        
+        this.address = new Address(suite, houseNum, streetName);
+        this.neighbourhoodInfo = new Neighbourhood(neighbourhoodID, 
+                neighbourhoodName, wardName);
+        this.coordinates = new Coordinates(latitude, longitude);
+    }  
     /**
      * Getter for
      * @return 
@@ -125,7 +128,7 @@ public class Record {
     public String toString(){
         return String.format(
                 "Account Number: %10d\tSuite: %7s\tLongitude: %f", 
-                this._accNum, this._address.getSuite(), this._coordinates.getLongitude());
+                this.accNum, this.address.getSuite(), this.coordinates.getLongitude());
 //        return "Account Number: " + this.accNum +
 //                "\tSuite: " + this.suite +
 //                "\tAssessed Value: " + this.assessedVal +

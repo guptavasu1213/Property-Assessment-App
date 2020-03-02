@@ -36,7 +36,7 @@ public class Project {
         
         // When user does not enter anything, use default file name
         if (fileName.equals("")){
-            return "Property_Assessment_Data_2020.csv";
+            return "Property_Assessment_Data_2020-MOD.csv";
         }
         return fileName;
     }
@@ -93,7 +93,7 @@ public class Project {
         return null; 
     }    
     
-    public void setUpRecords(String fileName) {
+    public ArrayList<Record> setUpRecords(String fileName) {
         Scanner csvReader = null;
         try {
             csvReader = new Scanner(Paths.get(fileName));
@@ -126,6 +126,7 @@ public class Project {
             csvReader.nextLine(); // Skips over the "\r\n" at the end of each line
         }
         csvReader.close();
+        return records;
     }
     
     /**
@@ -262,8 +263,8 @@ public class Project {
          // Building an array of Assessed Values for the Neighbourhood
         ArrayList<Long> assessedVals = new ArrayList<>();
         for (int i = 0; i < records.size(); i++) {
-            if ((records.get(i).getNeighbourhood().getName() != null) && 
-                (records.get(i).getNeighbourhood().getName().equalsIgnoreCase(neighbourhoodName))){
+            if ((records.get(i).getNeighbourhoodInfo().getName() != null) && 
+                (records.get(i).getNeighbourhoodInfo().getName().equalsIgnoreCase(neighbourhoodName))){
                 // Populating the ArrayList for the given neighbourhood
                 assessedVals.add(records.get(i).getAssessedVal());
             }
@@ -296,8 +297,8 @@ public class Project {
          // Building an array of Assessed Values for the Assessment Class
         ArrayList<Long> assessedVals = new ArrayList<>();
         for (int i = 0; i < records.size(); i++) {
-            if ((records.get(i).getNeighbourhood().getName() != null) && 
-                (records.get(i).getNeighbourhood().getAssessmentClass().equalsIgnoreCase(assessmentClass))){
+            if ((records.get(i).getNeighbourhoodInfo().getName() != null) && 
+                (records.get(i).getAssessmentClass().equalsIgnoreCase(assessmentClass))){
                 // Populating the ArrayList for the given neighbourhood
                 assessedVals.add(records.get(i).getAssessedVal());
             }
@@ -335,9 +336,9 @@ public class Project {
                         "\nAddress = " + record.getAddress().getSuite() + " " + 
                             record.getAddress().getHouseNum() + " " + record.getAddress().getStreetName() + 
                         "\nAssessed value = $" + (double) record.getAssessedVal() +
-                        "\nAssessment class = " + record.getNeighbourhood().getAssessmentClass() +
-                        "\nNeighbourhood = " + record.getNeighbourhood().getName() + 
-                                             " (" + record.getNeighbourhood().getWardName() + ")" +
+                        "\nAssessment class = " + record.getAssessmentClass() +
+                        "\nNeighbourhood = " + record.getNeighbourhoodInfo().getName() + 
+                                             " (" + record.getNeighbourhoodInfo().getWardName() + ")" +
                         "\nLocation = (" + record.getCoordinates().getLongitude() + ", " + 
                             record.getCoordinates().getLatitude() + ")");
             return;

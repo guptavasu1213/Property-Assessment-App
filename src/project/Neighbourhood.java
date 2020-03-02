@@ -12,35 +12,25 @@ package project;
  * @author vasug
  */
 class Neighbourhood {
-    private String _assessmentClass;
     private Integer _ID;    
     private String _Name;
     private String _wardName;
     
     /**
      * Constructor for Neighbourhood class
-     * @param assessmentClass residential or non-residential
      * @param neighbourhoodID Neighbourhood ID
      * @param neighbourhoodName Neighbourhood Name 
      * @param wardName Ward name/number
      * @author vasug
      */
-    public Neighbourhood(String assessmentClass, Integer neighbourhoodID, 
+    public Neighbourhood(Integer neighbourhoodID, 
             String neighbourhoodName, String wardName){
-        this._assessmentClass = assessmentClass;
         this._ID = neighbourhoodID;
         this._Name = neighbourhoodName;
         this._wardName = wardName;
     }
     
-    /**
-     * Getter for assessment class
-     * @return assessment class
-     * @author vasug
-     */
-    public String getAssessmentClass(){
-        return _assessmentClass;
-    }
+
     /**
      * Getter for Neighbourhood ID
      * @return Neighbourhood ID is returned
@@ -64,5 +54,10 @@ class Neighbourhood {
      */
     public String getWardName(){
         return _wardName;
+    }    
+
+    @Override
+    public String toString(){
+        return String.format(_Name);
     }    
 }

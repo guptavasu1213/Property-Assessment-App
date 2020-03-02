@@ -11,9 +11,9 @@ package project;
  * @author vasug
  */
 public class Address {
-    private String _suite;
-    private Integer _houseNum;
-    private String _streetName;
+    private String suite;
+    private Integer houseNum;
+    private String streetName;
     
     /**
      * Constructor for Address class
@@ -22,29 +22,44 @@ public class Address {
      * @param streetName Street name
      */
     public Address(String suite, Integer houseNum, String streetName){
-        this._suite = suite;
-        this._houseNum = houseNum;
-        this._streetName = streetName;
+        this.suite = suite;
+        this.houseNum = houseNum;
+        this.streetName = streetName;
     }
     /**
      * Getter for house number 
      * @return house number
      */
     public Integer getHouseNum(){
-        return _houseNum;
+        return houseNum;
     }
     /**
      * Getter for suite name
      * @return suite name
      */
     public String getSuite(){
-        return _suite;
+        return suite;
     }
     /**
      * Getter for street name 
      * @return street name
      */
     public String getStreetName(){
-        return _streetName;
+        return streetName;
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder strBuilder = new StringBuilder();
+        if (this.suite != null){
+            strBuilder.append(this.suite + " ");
+        }
+        if (this.houseNum != null){
+            strBuilder.append(this.houseNum + " ");
+        }
+        if (this.streetName != null){
+            strBuilder.append(this.streetName);
+        }
+        return strBuilder.toString();
     }
 }

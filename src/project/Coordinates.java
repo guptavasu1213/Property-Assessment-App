@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  * Coordinates class contains the longitude and latitude of the property
  * @author vasug
  */
-class Coordinates {
+public class Coordinates {
     private BigDecimal _latitude;
     private BigDecimal _longitude;    
 
