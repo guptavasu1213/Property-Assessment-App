@@ -23,7 +23,11 @@ import java.util.Scanner;
  */
 public class Project {
     private ArrayList<Record> records = new ArrayList<>();
+    private ArrayList<String> assessmentClasses = new ArrayList<>();
 
+    public List<String> getAssessmentClasses(){
+        return assessmentClasses;
+    }
     /**
      * Prompts the user for the file name and returns back the name. 
      * If no file name is specified, the default file is chosen.
@@ -36,7 +40,7 @@ public class Project {
         
         // When user does not enter anything, use default file name
         if (fileName.equals("")){
-            return "Property_Assessment_Data_2020-MOD.csv";
+            return "Property_Assessment_Data_2020.csv";
         }
         return fileName;
     }
@@ -92,6 +96,17 @@ public class Project {
 //        csvReader.next(); // Ignoring the value
         return null; 
     }    
+    public String getAssessmentClassString(Scanner csvReader){
+        String tmpStr = csvReader.next().trim();
+        if (tmpStr.isEmpty()){
+            return null;         
+        }
+        if (!assessmentClasses.contains(tmpStr)){
+            assessmentClasses.add(tmpStr);
+        }
+        return tmpStr;
+    }
+    
     
     public ArrayList<Record> setUpRecords(String fileName) {
         Scanner csvReader = null;
@@ -114,7 +129,8 @@ public class Project {
             // Creating a new record 
             Record temp = new Record(getLong(csvReader), getString(csvReader), 
                     getInt(csvReader), getString(csvReader), getLong(csvReader), 
-                    getString(csvReader), getInt(csvReader), getString(csvReader),
+                    getAssessmentClassString(csvReader), getInt(csvReader), 
+                    getString(csvReader),
                     getString(csvReader), getString(csvReader), 
                     getBigDecimal(csvReader), getBigDecimal(csvReader));
             
