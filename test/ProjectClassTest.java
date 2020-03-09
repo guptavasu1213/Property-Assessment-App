@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import project.Project; 
+import project.Project_Model; 
 /**
  * 
  * @author vasug
@@ -17,7 +17,7 @@ import project.Project;
 public class ProjectClassTest {
     private ArrayList<Long> vals = new ArrayList<>();
     
-    private Project proj = new Project();
+    private Project_Model proj = new Project_Model();
     
     // Populating the array with own values
     @Before

@@ -25,7 +25,14 @@ public class Record {
     private Neighbourhood neighbourhoodInfo;        
     private Coordinates coordinates;
     
-    
+    public BigDecimal getLatitude(){
+        return this.coordinates.getLatitude();
+    }
+
+    public BigDecimal getLongitude(){
+        return this.coordinates.getLongitude();
+    }
+
     /**
      * Getter for account number
      * @return Account number

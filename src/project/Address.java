@@ -47,7 +47,7 @@ public class Address {
     public String getStreetName(){
         return streetName;
     }
-
+    
     @Override
     public String toString(){
         StringBuilder strBuilder = new StringBuilder();

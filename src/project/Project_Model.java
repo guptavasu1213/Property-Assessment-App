@@ -21,10 +21,15 @@ import java.util.Scanner;
  * .csv file. After importing, 
  * @author vasug
  */
-public class Project {
-    private ArrayList<Record> records = new ArrayList<>();
+public class Project_Model {
+    private List<Record> records = new ArrayList<>();
     private ArrayList<String> assessmentClasses = new ArrayList<>();
 
+    
+    public List<Record> getAllRecords(){
+        return records;
+    }
+            
     public List<String> getAssessmentClasses(){
         return assessmentClasses;
     }
@@ -40,7 +45,7 @@ public class Project {
         
         // When user does not enter anything, use default file name
         if (fileName.equals("")){
-            return "Property_Assessment_Data_2020.csv";
+            return "Property_Assessment_Data_2020-MOD.csv";
         }
         return fileName;
     }
@@ -108,7 +113,7 @@ public class Project {
     }
     
     
-    public ArrayList<Record> setUpRecords(String fileName) {
+    public List<Record> setUpRecords(String fileName) {
         Scanner csvReader = null;
         try {
             csvReader = new Scanner(Paths.get(fileName));
@@ -234,22 +239,28 @@ public class Project {
      * @param std_dev Standard deviation of the values in the list
      * @param median Median of the values in the list
      */
-    private void displayStats(long n, long min, long max, long range,
+    private String displayStats(long n, long min, long max, long range,
                               BigDecimal mean, double std_dev, double median){
-        System.out.println("n: " + n +
+        String stats = "n: " + n +
                 "\nMin: " + min +
                 "\nMax: " + max +
                 "\nRange: " + range + 
                 "\nMean: " + mean.longValue() +
                 "\nStd Deviation: " + (long) std_dev +
-                "\nMedian: " + (long) median + "\n");
+                "\nMedian: " + (long) median + "\n";
+        System.out.println(stats);
+        return stats;
     }
 
     /**
      * Facilitates the calculation of statistics of all the records and 
      * displaying them on the console 
      */
-    public void allRecordsStats(){
+    public String findStats(List<Record> records){
+        if (records.size() == 1){ // When there is only one record
+            return "";
+        }
+        
         // Building an array of Assessed Values
         ArrayList<Long> assessedVals = new ArrayList<>(records.size());
         for (int i = 0; i < records.size(); i++) {
@@ -260,109 +271,90 @@ public class Project {
         List<Object> calculatedStats = calculateStats(assessedVals);
         // Displaying stats
         System.out.println( "Descriptive Statistics For All Property Classes:\n");
-        displayStats(assessedVals.size(), (long) calculatedStats.get(0), 
+        return displayStats(assessedVals.size(), (long) calculatedStats.get(0), 
                 (long) calculatedStats.get(1), (long) calculatedStats.get(2),
                 (BigDecimal) calculatedStats.get(3), (double) calculatedStats.get(4),
                 (double) calculatedStats.get(5));
     }
-    /**
-     * Prompts the user for a neighbourhood name and facilitates the calculation 
-     * of statistics of all the records associated with the user specified 
-     * neighbourhood and displaying them on the console 
-     */
-    public void neighbourhoodStats(){
-        // User input for Neighbourhood Name
-        Scanner console = new Scanner(System.in);  
-        System.out.print("\nNeighbourhood: ");
-        String neighbourhoodName = console.nextLine();
+    
+    public List<Record> findByNeighbourhood(String neighbourhoodName, List<Record> records){
+        if (records == null){ // When the user entered list is null
+            records = this.records;
+        } 
         
-         // Building an array of Assessed Values for the Neighbourhood
-        ArrayList<Long> assessedVals = new ArrayList<>();
-        for (int i = 0; i < records.size(); i++) {
-            if ((records.get(i).getNeighbourhoodInfo().getName() != null) && 
-                (records.get(i).getNeighbourhoodInfo().getName().equalsIgnoreCase(neighbourhoodName))){
-                // Populating the ArrayList for the given neighbourhood
-                assessedVals.add(records.get(i).getAssessedVal());
+        // Building an array of Assessed Values for the Neighbourhood
+        List<Record> neighbourhoodList = new ArrayList<>();
+        for (Record record : records) {
+            if ((record.getNeighbourhoodInfo().getName() != null) && 
+                (record.getNeighbourhoodInfo().getName().equalsIgnoreCase(neighbourhoodName))){
+                neighbourhoodList.add(record);                
             }
-        }        
-        // User entered neighbourhood name not in the data
-        if (assessedVals.isEmpty()){
-            System.out.println("\nCould not find a neightbourhood with given name.");
-            return;
-        }        
-        // Calculating stats
-        List<Object> calculatedStats = calculateStats(assessedVals);
-        // Displaying stats
-        System.out.println( "Statistics (neighbourhood = " + neighbourhoodName + ")");
-        displayStats(assessedVals.size(), (long) calculatedStats.get(0), 
-                (long) calculatedStats.get(1), (long) calculatedStats.get(2),
-                (BigDecimal) calculatedStats.get(3), (double) calculatedStats.get(4),
-                (double) calculatedStats.get(5));
-    }
-    /**
-     * Prompts the user for an Assessment Class and facilitates the calculation 
-     * of statistics of all the records associated with the user specified 
-     * assessedClass in a neighbourhood and displaying them on the console 
-     */
-    public void assessmentClassStats(){
-        // User input for Assessment Class Name
-        Scanner console = new Scanner(System.in);  
-        System.out.print("\nAssessment Class: ");
-        String assessmentClass = console.nextLine();
-        
-         // Building an array of Assessed Values for the Assessment Class
-        ArrayList<Long> assessedVals = new ArrayList<>();
-        for (int i = 0; i < records.size(); i++) {
-            if ((records.get(i).getNeighbourhoodInfo().getName() != null) && 
-                (records.get(i).getAssessmentClass().equalsIgnoreCase(assessmentClass))){
-                // Populating the ArrayList for the given neighbourhood
-                assessedVals.add(records.get(i).getAssessedVal());
-            }
-        }        
-        // User entered Assessment Class name not in the data
-        if (assessedVals.isEmpty()){
-            System.out.println("\nCould not find a Assessment class with the given name.");
-            return;
         }
-        // Calculating stats
-        List<Object> calculatedStats = calculateStats(assessedVals);
-        // Displaying stats
-        System.out.println( "Statistics (assessment class = " + assessmentClass + ")");
-        displayStats(assessedVals.size(), (long) calculatedStats.get(0), 
-                (long) calculatedStats.get(1), (long) calculatedStats.get(2),
-                (BigDecimal) calculatedStats.get(3), (double) calculatedStats.get(4),
-                (double) calculatedStats.get(5));
+        // When there is no such neighbourhood
+        if (neighbourhoodList.isEmpty()){
+            System.out.println("No neighbourhood found");
+            return null; // when nothing found
+        }
+        return neighbourhoodList;
     }
-    /**
-     * Prompts the user for an account number and displays the account number,
-     * address, assessed value, assessment class, neighbourhood information, and
-     * the coordinated of the property associated with it. 
-     * Displays an error message if the account number is not found.
-     */
-    public void findPropertyByAccount(){
-        // User input for Account Number
-        Scanner console = new Scanner(System.in);  
-        System.out.print("Find a property assessment by account number: ");
-        long userAccNo = console.nextLong();
+    
+    public List<Record> findByAssessmentClass(String assessmentClass, List<Record> records){
+        if (records == null){ // When the user entered list is null
+            records = this.records;
+        } 
         
+        // Building an array of Assessed Values for the Neighbourhood
+        List<Record> classList = new ArrayList<>();
+        for (Record record : records) {
+            if ((record.getAssessmentClass() != null) && 
+                (record.getAssessmentClass().equalsIgnoreCase(assessmentClass))){
+                classList.add(record);                
+            }
+        }
+        // When there is no such neighbourhood
+        if (classList.isEmpty()){
+            System.out.println("No such class found");
+            return null; // when nothing found
+        }
+        return classList;
+    }
+    public List<Record> findByAddress(String address, List<Record> records){
+        if (records == null){ // When the user entered list is null
+            records = this.records;
+        } 
+        
+        // Building an array of Assessed Values for the Neighbourhood
+        List<Record> addressList = new ArrayList<>();
+        for (Record record : records) {
+            if (record.getAddress().toString().equalsIgnoreCase(address)){
+                addressList.add(record);                
+            }
+        }
+        // When there is no such neighbourhood
+        if (addressList.isEmpty()){
+            System.out.println("No such class found");
+            return null; // when nothing found
+        }
+        return addressList;
+    }
+    
+    /**
+     * Displays the account number, address, assessed value, assessment class, 
+     * neighbourhood information, and the coordinated of the property associated 
+     * with it. Displays an error message if the account number is not found.
+     */
+    public Record findPropertyByAccount(long userAccNo){        
         // Displaying the information of the user requested account
         for (Record record : records) {
             if (record.getAccNum() == userAccNo){ // match
-                System.out.println("\nAccount Number = " + record.getAccNum() +
-                        "\nAddress = " + record.getAddress().getSuite() + " " + 
-                            record.getAddress().getHouseNum() + " " + record.getAddress().getStreetName() + 
-                        "\nAssessed value = $" + (double) record.getAssessedVal() +
-                        "\nAssessment class = " + record.getAssessmentClass() +
-                        "\nNeighbourhood = " + record.getNeighbourhoodInfo().getName() + 
-                                             " (" + record.getNeighbourhoodInfo().getWardName() + ")" +
-                        "\nLocation = (" + record.getCoordinates().getLongitude() + ", " + 
-                            record.getCoordinates().getLatitude() + ")");
-            return;
+                System.out.println("Account found with the given acc number!");
+                return record;
             }
         }
         // When account does not exist
         System.out.println("\nSorry, couldn't find the account with the account" + 
                 " number " + userAccNo + ".");
+        return null;
     }
 
 }
