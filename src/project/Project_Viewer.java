@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package project;
 
 import java.util.ArrayList;
@@ -27,8 +22,10 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /**
- *
- * @author vasug
+ * This class is used for creating a GUI to allow the user to search through the
+ * records using multiple filters and seeing the records passing those filters
+ * in a table.
+ * @author vasug Vasu Gupta
  */
 public class Project_Viewer {
     private TableView table;
@@ -37,7 +34,7 @@ public class Project_Viewer {
     private VBox SearchVBox; // LHS
     private VBox tableVBox;  // RHS
     
-    private HBox screenHBox;
+    private HBox screenHBox; // For holding LHS and RHS
     private Scene scene;
     
     private TextField accNumField;
@@ -51,33 +48,96 @@ public class Project_Viewer {
     
     private Stage primaryStage;
 
+    /**
+     * Constructor for the class. Sets the primary stage for the JavaFx Application
+     * Sets up the GUI with the left hand side with search fields and
+     * the right hand side with the an empty table with columns defined
+     * @param primaryStage 
+     */
     public Project_Viewer(Stage primaryStage) {
         this.primaryStage = primaryStage;
         setUpGUI();
     }
-
+    /**
+     * Sets the stats label on the left hand side with the String passed as param
+     * @param result 
+     */
+    public void setStatsLabel(String result){
+        statsLabel.setText(result);
+    }
+    /**
+     * Returns the assessment class selected in the drop down menu
+     * @return Selected class in the drop down. Null if nothing is selected.
+     */
+    public String getAssessmentClass(){
+        return assessmentClassChoiceBox.getValue();
+    }
+    /**
+     * Sets the assessment classes in the drop down as the values from the
+     * dataset.
+     * @param assClasses List of all the assessment classes in the dataset
+     */
+    public void setAssessmentClasses(List<String> assClasses){
+        assessmentClassChoiceBox.getItems().addAll(assClasses);
+    }
+    /**
+     * Gets the text in the neighbourhood text field on LHS
+     * @return String storing the text in neighbourhood text field
+     */
+    public String getNeighbourhood(){
+        return neighField.getText().trim();        
+    }    
+    /**
+     * Gets the text in the address text field on LHS
+     * @return String storing the text in address text field
+     */
+    public String getAddress(){
+        return addressField.getText().trim();        
+    }
+    
+    /**
+     * Gets the text in the account number text field on LHS
+     * @return String storing the text in account number text field
+     */
+    public String getAccNum(){
+        return accNumField.getText().trim();
+    }
+    
+    /**
+     * Getting the search button
+     * @return Search Button
+     */
+    public Button getSearchButton(){
+        return searchButton;
+    }
+    /**
+     * Getting the clear button
+     * @return Clear Button
+     */
+    public Button getClearButton(){
+        return clearButton;
+    }
+    /**
+     * Sets all the fields to empty values
+     */
+    public void resetAllFields(){
+        accNumField.setText("");
+        addressField.setText("");
+        neighField.setText("");
+        assessmentClassChoiceBox.setValue(null);
+    }
+    /**
+     * Update the table on the RHS in the GUI with the value in records
+     * @param records Value(s) to be filled in the table
+     */
     public void updateGUI(List<Record> records){
         data = FXCollections.observableArrayList(records);
         table.setItems(data);
         
     }
-            
-    public void setUpTableBoxGUI(Label propertyLabel){
-        tableVBox = new VBox(10);
-        tableVBox.setPadding(new Insets(0, 0, 0, 10));
-        
-        List<Record> records = new ArrayList<>(); // Empty records
-        createSimpleTable(records); // 'table' is populated with data
-        
-        tableVBox.setAlignment(Pos.CENTER_LEFT);
-        tableVBox.getChildren().addAll(propertyLabel,table);
-        
-        // SearchBox and TableBox will be placed horizontally in hb
-//        HBox screenHBox = new HBox(50);     // set spacing between vb1 and vb2 to 20
-        
-    }
-    
-    
+    /**
+     * Sets up the LHS of the GUI by creating search fields, buttons and labels.
+     */
     public void setUpSearchBoxGUI(){
         SearchVBox = new VBox(10);    // set spacing between these nodes to 10
         SearchVBox.setPadding(new Insets(0, 0, 0, 10)); // Add padding to the left
@@ -110,32 +170,27 @@ public class Project_Viewer {
         Label assessmentClassLabel = new Label("Assessment class");
         assessmentClassLabel.setFont(new Font("Ariel", 15));
         
+        // Choice box drop down menu
         assessmentClassChoiceBox = new ChoiceBox<>();
-        assessmentClassChoiceBox.setMinWidth(30);
-        assessmentClassChoiceBox.setMaxWidth(40);
-        
+        assessmentClassChoiceBox.setPrefWidth(120);
+
         searchButton = new Button();
         searchButton.setText("Search");
 
         clearButton = new Button();
         clearButton.setText("Clear");
-        clearButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override // Action for clearing everything
-            public void handle(ActionEvent event) {
-                accNumField.setText("");
-                addressField.setText("");
-                neighField.setText("");
-                assessmentClassChoiceBox.setValue(null);
-                statsLabel.setText("");
-            }
-        });
+
         // Label for Stats
         Label statsHeadingLabel = new Label("Edmonton Property Assessments");
         statsHeadingLabel.setFont(new Font("Ariel", 13));
 
         // Label for Stats
         statsLabel = new Label("");
-        statsLabel.setFont(new Font("Ariel", 13));        
+        statsLabel.setFont(new Font("Ariel", 13));
+        statsLabel.setStyle("-fx-background-color: #ffffff");
+        statsLabel.setMinSize(200, 200);
+        statsLabel.setAlignment(Pos.TOP_LEFT);
+        
         
         SearchVBox.setAlignment(Pos.CENTER_LEFT);
         SearchVBox.getChildren().addAll(assessmentLabel, accNumLabel, 
@@ -144,39 +199,26 @@ public class Project_Viewer {
                 clearButton, statsHeadingLabel, statsLabel
                 );   
     }
-
-    public void setStatsLabel(String result){
-        statsLabel.setText(result);
+    /**
+     * Sets up the RHS with the table structure (with columns), but no data in 
+     * the table
+     * @param propertyLabel 
+     */
+    public void setUpTableBoxGUI(Label propertyLabel){
+        tableVBox = new VBox(10);
+        tableVBox.setPadding(new Insets(0, 0, 0, 10));
+        
+        List<Record> records = new ArrayList<>(); // Empty records
+        createSimpleTable(records); // 'table' is populated with data
+        
+        tableVBox.setAlignment(Pos.CENTER_LEFT);
+        tableVBox.getChildren().addAll(propertyLabel,table);
+        
     }
-            
-    public String getAssessmentClass(){
-        return assessmentClassChoiceBox.getValue();
-    }
-    public void setAssessmentClasses(List<String> assClasses){
-        assessmentClassChoiceBox.getItems().addAll(assClasses);
-    }
-    
-    public String getNeighbourhood(){
-        return neighField.getText().trim();        
-    }    
-
-    public String getAddress(){
-        return addressField.getText().trim();        
-    }
-    
-    // Just returns the user input
-    public String getAccNum(){
-        return accNumField.getText().trim();
-    }
-    
-    public void setSearchListener(EventHandler<ActionEvent> handler){
-        searchButton.setOnAction(handler);
-    }
-    
-    // GET RID OF THIS
-    public void setAccNumListener(EventHandler<ActionEvent> handler){
-        accNumField.setOnAction(handler);        
-    }
+    /**
+     * Sets up the GUI with the left hand side with search fields and
+     * the right hand side with the an empty table with columns defined
+     */
     public void setUpGUI(){        
         screenHBox = new HBox(50);     // creating a horizontal container
         
@@ -200,131 +242,10 @@ public class Project_Viewer {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-    
-    public void show1(ArrayList<Record> records){
         
-    }
-    
-    /*
-    public void show(ArrayList<Record> records) {
-        primaryStage.setTitle("Edmonton Property Data");
-        // Setting up the data source
-//        Project_Model lab4 = new Project_Model();
-//        String fileName = lab4.getFileName();
-//        ArrayList<Record> records = lab4.setUpRecords(fileName); 
-        
-//===========        
-//        tableVBox = new VBox(10);
-//        Label propertyLabel = new Label("Edmonton Properties");
-//
-//        screenHBox = new HBox(50);     // set spacing between vb1 and vb2 to 20
-//                
-//        // set the scene
-//        scene = new Scene(screenHBox, 1350, 800);
-//===========        
-        
-        // Creating search Vbox for the left-hand-side
-        VBox SearchVBox = new VBox(10);    // set spacing between these nodes to 10
-        SearchVBox.setPadding(new Insets(0, 0, 0, 10)); // Add padding to the left
-        
-        // Label for search Vbox
-        Label assessmentLabel = new Label("Find Property Assessment");
-        assessmentLabel.setFont(new Font("Ariel",20));
-    
-        // Label for Account Number
-        Label accNumLabel = new Label("Account Number");
-        accNumLabel.setFont(new Font("Ariel",15));
-
-        // Text field for account number user input
-        TextField accNumField = new TextField();
-        // Event Listener
-        accNumField.setOnAction(handler);
-        
-        // Label for Address
-        Label addressLabel = new Label("Address");
-        addressLabel.setFont(new Font("Ariel",15));
-        // Text field for address user input
-        TextField addressField = new TextField();
-        // Event Listener
-        addressField.setOnAction(new EventHandler<ActionEvent>() {
-          public void handle(ActionEvent event) {
-              String userAddress = addressField.getText().trim();
-              System.out.println("Address: " + userAddress);
-              
-//              lab4.findPropertiesByAddress()
-          }
-        });
-
-        // Label for Neighbourhood name
-        Label neighLabel = new Label("Neighbourhood");
-        neighLabel.setFont(new Font("Ariel",15));
-
-        // Text field for neighbourhood user input
-        TextField neighField = new TextField();
-        // Event Listener
-        neighField.setOnAction(new EventHandler<ActionEvent>() {
-          public void handle(ActionEvent event) {
-              String userNeighName = neighField.getText().trim();
-              System.out.println("Neighbourhood: " + userNeighName);
-          }
-        });
-
-        // Label for Assessment class
-        Label assessmentClassLabel = new Label("Assessment class");
-        assessmentClassLabel.setFont(new Font("Ariel", 15));
-        
-        ChoiceBox<String> assessmentClassChoiceBox = new ChoiceBox<>();
-        // Importing the assessment classes we have
-        assessmentClassChoiceBox.getItems().addAll(lab4.getAssessmentClasses());
-        // Event listener
-        assessmentClassChoiceBox.setOnAction(new EventHandler<ActionEvent>() {
-          public void handle(ActionEvent event) {
-              String userAssessmentClass = assessmentClassChoiceBox.getValue();
-              System.out.println("Class: " + userAssessmentClass);
-          }
-        });
-        
-        // Label for Stats
-        Label statsLabel = new Label("Edmonton Property Assessments");
-        statsLabel.setFont(new Font("Ariel", 13));
-        
-        SearchVBox.setAlignment(Pos.CENTER_LEFT);
-        SearchVBox.getChildren().addAll(assessmentLabel, accNumLabel, 
-                accNumField, addressLabel, addressField, neighLabel, neighField,
-                assessmentClassLabel, assessmentClassChoiceBox, statsLabel);
-        
-
-        // Creating Vertical Box for the table on the right-hand-side
-//        tableVBox = new VBox(10);     // set spacing between these nodes to 5
-        tableVBox.setPadding(new Insets(0, 0, 0, 10));
-        
-//        propertyLabel = new Label("Edmonton Properties");
-        propertyLabel.setFont(new Font("Ariel",20));
-        
-        createSimpleTable(records); // 'table' is populated with data
-        
-        tableVBox.setAlignment(Pos.CENTER_LEFT);
-        tableVBox.getChildren().addAll(propertyLabel,table);
-        
-        // SearchBox and TableBox will be placed horizontally in hb
-//        HBox screenHBox = new HBox(50);     // set spacing between vb1 and vb2 to 20
-                
-        // set the scene
-//        Scene scene = new Scene(screenHBox, 1350, 800);
-        screenHBox.setAlignment(Pos.BASELINE_LEFT);
-        screenHBox.getChildren().addAll(SearchVBox, tableVBox);
-        
-        // Setting the scene
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
-    }
-    
-    */
-    
     /** 
-     * #############CHANGE DOCUMENTATION
-     * Creating the table and populating the values in the table using Records
+     * Creating the table, set up columns, and specify the attributes to use
+     * from the records.
      * .csv file
      */
     private void createSimpleTable(List<Record> records){   

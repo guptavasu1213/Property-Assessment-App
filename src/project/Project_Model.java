@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package project;
 
 import java.io.IOException;
@@ -17,38 +12,70 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * This class contains the list of records importing them from the specified
- * .csv file. After importing, 
+ * This class creates a list of records found from a .csv file.
+ * Allows the lookup of records in 
+ * Allows the calculation of statistics.
  * @author vasug
  */
 public class Project_Model {
     private List<Record> records = new ArrayList<>();
     private ArrayList<String> assessmentClasses = new ArrayList<>();
 
-    
+    /**
+     * Constructor for the class
+     * Gets the contents from the given .csv file and import them into a list of
+     * records
+     * @param fileName File name of the .csv file
+     */
+    public Project_Model(String fileName){
+        Scanner csvReader = null;
+        try {
+            csvReader = new Scanner(Paths.get(fileName));
+        } catch (IOException ex) {
+            System.out.println("\nFile Not Found.\nProgram Terminated.\n");
+            System.exit(1); // Terminate program
+        }
+
+        // Setting up the records
+        // Skipping the header for the file
+        if (csvReader.hasNextLine()){
+            csvReader.nextLine();
+        }
+        
+        // Iterating through each record
+        while (csvReader.hasNextLine()){
+            csvReader.useDelimiter(",|\\r"); // Two delimiters- "," and "\r" 
+            // Creating a new record 
+            Record temp = new Record(getLong(csvReader), getString(csvReader), 
+                    getInt(csvReader), getString(csvReader), getLong(csvReader), 
+                    getAssessmentClassString(csvReader), getInt(csvReader), 
+                    getString(csvReader),
+                    getString(csvReader), getString(csvReader), 
+                    getBigDecimal(csvReader), getBigDecimal(csvReader));
+            
+            if (temp.isEmpty()){ // When all attributes of temp are not null
+                csvReader.nextLine();
+                continue;
+            }
+            records.add(temp);
+            csvReader.nextLine(); // Skips over the "\r\n" at the end of each line
+        }
+        csvReader.close();
+    }
+            
+    /**
+     * @return all the records stored
+     */
     public List<Record> getAllRecords(){
         return records;
     }
-            
+    /**
+     * @return All the assessment classes in records
+     */
     public List<String> getAssessmentClasses(){
         return assessmentClasses;
     }
-    /**
-     * Prompts the user for the file name and returns back the name. 
-     * If no file name is specified, the default file is chosen.
-     * @return File name 
-     */
-    public String getFileName() {
-        Scanner console = new Scanner(System.in);  
-        System.out.print("CSV filename [press enter for default file]: ");
-        String fileName = console.nextLine();
-        
-        // When user does not enter anything, use default file name
-        if (fileName.equals("")){
-            return "Property_Assessment_Data_2020-MOD.csv";
-        }
-        return fileName;
-    }
+
     /**
      * Getting the String value from the Scanner object
      * @param csvReader Scanner object
@@ -100,7 +127,13 @@ public class Project_Model {
         }
 //        csvReader.next(); // Ignoring the value
         return null; 
-    }    
+    }
+    /**
+     * Adds the assessment class to a list and returns the content read from the
+     * scanner object
+     * @param csvReader
+     * @return String storing the assessment class
+     */
     public String getAssessmentClassString(Scanner csvReader){
         String tmpStr = csvReader.next().trim();
         if (tmpStr.isEmpty()){
@@ -111,45 +144,7 @@ public class Project_Model {
         }
         return tmpStr;
     }
-    
-    
-    public List<Record> setUpRecords(String fileName) {
-        Scanner csvReader = null;
-        try {
-            csvReader = new Scanner(Paths.get(fileName));
-        } catch (IOException ex) {
-            System.out.println("\nFile Not Found.\nProgram Terminated.\n");
-            System.exit(1); // Terminate program
-        }
-
-        // Setting up the records
-        // Skipping the header for the file
-        if (csvReader.hasNextLine()){
-            csvReader.nextLine();
-        }
         
-        // Iterating through each record
-        while (csvReader.hasNextLine()){
-            csvReader.useDelimiter(",|\\r"); // Two delimiters- "," and "\r" 
-            // Creating a new record 
-            Record temp = new Record(getLong(csvReader), getString(csvReader), 
-                    getInt(csvReader), getString(csvReader), getLong(csvReader), 
-                    getAssessmentClassString(csvReader), getInt(csvReader), 
-                    getString(csvReader),
-                    getString(csvReader), getString(csvReader), 
-                    getBigDecimal(csvReader), getBigDecimal(csvReader));
-            
-            if (temp.isEmpty()){ // When all attributes of temp are not null
-                csvReader.nextLine();
-                continue;
-            }
-            records.add(temp);
-            csvReader.nextLine(); // Skips over the "\r\n" at the end of each line
-        }
-        csvReader.close();
-        return records;
-    }
-    
     /**
      * Calculates the minimum value in the list
      * @param assessedVals The ArrayList of assessed values
@@ -276,7 +271,15 @@ public class Project_Model {
                 (BigDecimal) calculatedStats.get(3), (double) calculatedStats.get(4),
                 (double) calculatedStats.get(5));
     }
-    
+    /**
+     * Finding the neighbourhood name in the passed list of records.
+     * If the list is not defined, then the neighbourhood is found based on the 
+     * list of all the records
+     * @param neighbourhoodName The neighbourhood name to be searched
+     * @param records The records to be searched for
+     * @return List of records found with the given neighbourhood. Null if no such
+     * records are found
+     */
     public List<Record> findByNeighbourhood(String neighbourhoodName, List<Record> records){
         if (records == null){ // When the user entered list is null
             records = this.records;
@@ -297,12 +300,19 @@ public class Project_Model {
         }
         return neighbourhoodList;
     }
-    
+    /**
+     * Finding the assessment class in the passed list of records.
+     * If the list is not defined, then the assessment class is found based on 
+     * the list of all the records
+     * @param assessmentClass The assessment class  name to be searched
+     * @param records The records to be searched for
+     * @return List of records found with the given assessment class. 
+     * Null if no such records are found
+     */
     public List<Record> findByAssessmentClass(String assessmentClass, List<Record> records){
         if (records == null){ // When the user entered list is null
             records = this.records;
-        } 
-        
+        }
         // Building an array of Assessed Values for the Neighbourhood
         List<Record> classList = new ArrayList<>();
         for (Record record : records) {
@@ -318,11 +328,19 @@ public class Project_Model {
         }
         return classList;
     }
+    /**
+     * Finding the address in the passed list of records.
+     * If the list is not defined, then the address is found based on 
+     * the list of all the records
+     * @param address The address name to be searched
+     * @param records The records to be searched for
+     * @return List of records found with the given address. 
+     * Null if no such records are found
+     */    
     public List<Record> findByAddress(String address, List<Record> records){
         if (records == null){ // When the user entered list is null
             records = this.records;
-        } 
-        
+        }
         // Building an array of Assessed Values for the Neighbourhood
         List<Record> addressList = new ArrayList<>();
         for (Record record : records) {
@@ -339,9 +357,7 @@ public class Project_Model {
     }
     
     /**
-     * Displays the account number, address, assessed value, assessment class, 
-     * neighbourhood information, and the coordinated of the property associated 
-     * with it. Displays an error message if the account number is not found.
+     * Looks up the property record 
      */
     public Record findPropertyByAccount(long userAccNo){        
         // Displaying the information of the user requested account
@@ -356,5 +372,4 @@ public class Project_Model {
                 " number " + userAccNo + ".");
         return null;
     }
-
 }

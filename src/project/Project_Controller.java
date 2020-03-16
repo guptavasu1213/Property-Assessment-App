@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package project;
 
 import java.util.ArrayList;
@@ -12,8 +7,8 @@ import javafx.event.EventHandler;
 import javafx.stage.Stage;
 
 /**
- *
- * @author vasug
+ * Controller class acts as a middleman between the Model and the Viewer class
+ * @author vasug Vasu Gupta
  */
 public class Project_Controller {
     private Project_Model model; // Stores data
@@ -25,33 +20,40 @@ public class Project_Controller {
      * @param model
      * @param viewer 
      */
-    public Project_Controller(Project_Model model, Project_Viewer viewer){
+    public Project_Controller(Project_Model model, Project_Viewer viewer) {
         this.model = model;
         this.viewer = viewer;
-//        setAccountNumEvent();
-        setSearchEvent();
+        setSearchEvent(); // Sets the Listener for the search button in the viewer
+        setClearEvent(); // Sets the Listener for the clear button in the viewer
     }
-    
-    public void getAndShow(){
-        String fileName = model.getFileName();
-        List<Record> records = model.setUpRecords(fileName);
-    }
-    
+   /**
+    * The Sets up the GUI, and adds the records from the model to the table in the GUI
+    */    
     public void displayAllRecords(){
-        // Sets up the structure of the GUI with the table
-        List<Record> records = model.setUpRecords("Property_Assessment_Data_2020-MOD.csv");
+        // Getting all the records stored in the model
+        List<Record> records = model.getAllRecords();
         // Fills in the values of the table
         viewer.updateGUI(records);
         // Sets up the assesment classes in the table by pulling out the classes
-        // from the table
+        // from the records in model
         viewer.setAssessmentClasses(getAssessmentClasses());
+        viewer.setStatsLabel(model.findStats(records));
     }
     
+    /**
+     * Sets the table in the GUI to display nothing
+     */
     public void setTableEmpty(){
         viewer.setStatsLabel("No such record found");        
         viewer.updateGUI(new ArrayList<Record>());
     }
-            
+    /**
+     * Looking up the records by Account number
+     * Verifying the correct input
+     * Reporting if the account number does not exist
+     * @param userString
+     * @return 
+     */
     public List<Record> searchByAccNo(String userString){
         Long userAccNo;
         // When the user enters something (not an empty string)
@@ -74,22 +76,52 @@ public class Project_Controller {
         else{
             System.out.println("FOUND IT");
             ArrayList<Record> temp = new ArrayList<>();
-            temp.add(userRecord); // MAYBE MOVE THIS AROUND###########
-            viewer.updateGUI(temp);
+            temp.add(userRecord); 
             return temp;
         }                  
     }
+    
+    /**
+     * Getting all the assessment classes from the records
+     * @return 
+     */
+    public List<String> getAssessmentClasses(){
+        return model.getAssessmentClasses();
+    }
 
+    /**
+     * Creating and setting the handler for the clear button
+     * Populates the table with all the records and displays their statistics
+     * The button resets all the text fields
+     */
+    public void setClearEvent(){
+        viewer.getClearButton().setOnAction(new EventHandler<ActionEvent>() {
+            @Override // Action for clearing everything
+            public void handle(ActionEvent event) {
+                List<Record> records = model.getAllRecords();
+                // Fills in the values of the table
+                viewer.updateGUI(records);
+                // Set the labels
+                viewer.setStatsLabel(model.findStats(records));
+                // Setting all the fields empty
+                viewer.resetAllFields();
+            }
+        });        
+    }
+    
+    /**
+     * Setting the event listener for the search button in the viewer.
+     */
     public void setSearchEvent(){
-        EventHandler<ActionEvent> handler = new EventHandler<ActionEvent>() {
+        viewer.getSearchButton().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 List<Record> finalList = null; // Stores the records passing all filters
                 
-                String userAccNo = viewer.getAccNum();
-                String userAddress = viewer.getAddress();
-                String userAssClass =  viewer.getAssessmentClass();
-                String userNeighbourhood = viewer.getNeighbourhood();
+                String userAccNo = viewer.getAccNum(); // Gets the text in account number text field
+                String userAddress = viewer.getAddress(); // Gets the text in Address text field
+                String userAssClass =  viewer.getAssessmentClass(); // Gets the assessment class selected from the drop down
+                String userNeighbourhood = viewer.getNeighbourhood(); // Gets the text in neighbourhood text field
                 
                 // When all fields are empty
                 if (userAccNo.equals("") && userAddress.equals("")&& 
@@ -139,11 +171,6 @@ public class Project_Controller {
                     viewer.updateGUI(finalList);
                 }
             }
-        };
-        viewer.setSearchListener(handler); // Setting the handler for the button
-    }
-    
-    public List<String> getAssessmentClasses(){
-        return model.getAssessmentClasses();
-    }
+        });
+    }    
 }

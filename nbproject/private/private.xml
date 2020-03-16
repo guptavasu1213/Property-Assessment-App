@@ -3,13 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/MacEwan/Winter%2020/CMPT%20305/Labs/Project/Project/src/project/GUI_Creator.java</file>
+            <file>file:/E:/MacEwan/Winter%2020/CMPT%20305/Labs/Project/Project/src/project/Main.java</file>
+            <file>file:/E:/MacEwan/Winter%2020/CMPT%20305/Labs/Project/Project/src/project/Project_Controller.java</file>
             <file>file:/E:/MacEwan/Winter%2020/CMPT%20305/Labs/Project/Project/src/project/Record.java</file>
-            <file>file:/E:/MacEwan/Winter%2020/CMPT%20305/Labs/Project/Project/src/project/Lab2Main.java</file>
-            <file>file:/E:/MacEwan/Winter%2020/CMPT%20305/Labs/Project/Project/src/project/Property_GUIController.java</file>
-            <file>file:/E:/MacEwan/Winter%2020/CMPT%20305/Labs/Project/Project/src/project/Property_GUI.fxml</file>
+            <file>file:/E:/MacEwan/Winter%2020/CMPT%20305/Labs/Project/Project/test/ProjectClassTest.java</file>
+            <file>file:/E:/MacEwan/Winter%2020/CMPT%20305/Labs/Project/Project/src/project/Project_Model.java</file>
             <file>file:/E:/MacEwan/Winter%2020/CMPT%20305/Labs/Project/Project/src/project/Coordinates.java</file>
-            <file>file:/E:/MacEwan/Winter%2020/CMPT%20305/Labs/Project/Project/src/project/Project.java</file>
         </group>
     </open-files>
 </project-private>
