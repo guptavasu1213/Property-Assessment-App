@@ -41,10 +41,17 @@ public class Record {
         return accNum;
     }
     /**
+     * Getter for assessed value with '$'
+     * @return Assessed value as a string
+     */    
+    public String getAssessedVal(){
+        return "$" + assessedVal.toString();
+    }
+    /**
      * Getter for assessed value
      * @return Assessed value
      */
-    public Long getAssessedVal(){
+    public Long getAssessedValue(){
         return assessedVal;
     }
     /**

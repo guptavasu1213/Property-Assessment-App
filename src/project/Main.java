@@ -22,7 +22,7 @@ public class Main extends Application {
      * Runs at the launch of JavaFX Application
      */
     public void start(Stage primaryStage) {
-        model = new Project_Model("Property_Assessment_Data_2020-MOD.csv");
+        model = new Project_Model("Property_Assessment_Data_2020.csv");
         viewer = new Project_Viewer(primaryStage);
         controller = new Project_Controller(model, viewer);
         // Showing all the records from the model to the tables in the viewer GUI

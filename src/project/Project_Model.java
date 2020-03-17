@@ -1,5 +1,7 @@
 package project;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,7 +11,7 @@ import java.util.List;
  * @author vasug
  */
 public class Project_Model {
-    PropertyAssessments properties;
+    private PropertyAssessments properties;
 
     /**
      * Constructor for the class
@@ -20,7 +22,7 @@ public class Project_Model {
     public Project_Model(String fileName){
         properties = new PropertyAssessments(fileName);
     }
-            
+       
     /**
      * @return all the records stored
      */
@@ -38,9 +40,25 @@ public class Project_Model {
      * displaying them on the console 
      */
     public String findStats(List<Record> records){
-        return properties.findStats(records);
-    }
+        if (records.size() == 1){ // When there is only one record
+            return "";
+        }
+        
+        // Building an array of Assessed Values
+        ArrayList<Long> assessedVals = new ArrayList<>(records.size());
+        for (int i = 0; i < records.size(); i++) {
+            assessedVals.add(records.get(i).getAssessedValue());
+        }
 
+        // Calculating stats
+        List<Object> calculatedStats = properties.calculateStats(assessedVals);
+        // Displaying stats
+        System.out.println( "Descriptive Statistics For All Property Classes:\n");
+        return properties.displayStats(assessedVals.size(), (long) calculatedStats.get(0), 
+                (long) calculatedStats.get(1), (long) calculatedStats.get(2),
+                (BigDecimal) calculatedStats.get(3), (double) calculatedStats.get(4),
+                (double) calculatedStats.get(5));
+    }
 
     /**
      * Finding the neighbourhood name in the passed list of records.
@@ -52,7 +70,24 @@ public class Project_Model {
      * records are found
      */
     public List<Record> findByNeighbourhood(String neighbourhoodName, List<Record> records){
-        return properties.findByNeighbourhood(neighbourhoodName, records);
+        if (records == null){ // When the user entered list is null
+            records = properties.getAllRecords();
+        } 
+        
+        // Building an array of Assessed Values for the Neighbourhood
+        List<Record> neighbourhoodList = new ArrayList<>();
+        for (Record record : records) {
+            if ((record.getNeighbourhoodInfo().getName() != null) && 
+                (record.getNeighbourhoodInfo().getName().equalsIgnoreCase(neighbourhoodName))){
+                neighbourhoodList.add(record);                
+            }
+        }
+        // When there is no such neighbourhood
+        if (neighbourhoodList.isEmpty()){
+            System.out.println("No neighbourhood found");
+            return null; // when nothing found
+        }
+        return neighbourhoodList;
     }
     /**
      * Finding the assessment class in the passed list of records.
@@ -64,7 +99,23 @@ public class Project_Model {
      * Null if no such records are found
      */
     public List<Record> findByAssessmentClass(String assessmentClass, List<Record> records){
-        return properties.findByAssessmentClass(assessmentClass, records);
+        if (records == null){ // When the user entered list is null
+            records = properties.getAllRecords();
+        }
+        // Building an array of Assessed Values for the Neighbourhood
+        List<Record> classList = new ArrayList<>();
+        for (Record record : records) {
+            if ((record.getAssessmentClass() != null) && 
+                (record.getAssessmentClass().equalsIgnoreCase(assessmentClass))){
+                classList.add(record);                
+            }
+        }
+        // When there is no such neighbourhood
+        if (classList.isEmpty()){
+            System.out.println("No such class found");
+            return null; // when nothing found
+        }
+        return classList;
     }
     
     /**
@@ -77,13 +128,38 @@ public class Project_Model {
      * Null if no such records are found
      */    
     public List<Record> findByAddress(String address, List<Record> records){
-        return properties.findByAddress(address, records);
+        if (records == null){ // When the user entered list is null
+            records = properties.getAllRecords();
+        }
+        // Building an array of Assessed Values for the Neighbourhood
+        List<Record> addressList = new ArrayList<>();
+        for (Record record : records) {
+            if (record.getAddress().toString().equalsIgnoreCase(address)){
+                addressList.add(record);                
+            }
+        }
+        // When there is no such neighbourhood
+        if (addressList.isEmpty()){
+            System.out.println("No such class found");
+            return null; // when nothing found
+        }
+        return addressList;
     }
     
     /**
      * Looks up the property record 
      */
     public Record findPropertyByAccount(long userAccNo){
-        return properties.findPropertyByAccount(userAccNo);
+        // Displaying the information of the user requested account
+        for (Record record : properties.getAllRecords()) {
+            if (record.getAccNum() == userAccNo){ // match
+                System.out.println("Account found with the given acc number!");
+                return record;
+            }
+        }
+        // When account does not exist
+        System.out.println("\nSorry, couldn't find the account with the account" + 
+                " number " + userAccNo + ".");
+        return null;
     }
 }

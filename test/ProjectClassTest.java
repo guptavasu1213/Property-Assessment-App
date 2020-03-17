@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import project.Project_Model; 
+import project.PropertyAssessments;
 /**
  * 
  * @author vasug
@@ -11,7 +11,7 @@ import project.Project_Model;
 public class ProjectClassTest {
     private ArrayList<Long> vals = new ArrayList<>();
     
-    private Project_Model proj = new Project_Model();
+    private PropertyAssessments proj = new PropertyAssessments("Property_Assessment_Data_2020.csv");
     
     // Populating the array with own values
     @Before

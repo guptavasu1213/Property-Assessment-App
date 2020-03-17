@@ -135,7 +135,10 @@ public class Project_Viewer {
         table.setItems(data);
         
     }
-    
+    /**
+     * Setting up Search button and Clear button side by side on the Left Hand Side of the GUI
+     * @param buttons 
+     */
     public void setUpButtons(HBox buttons){
         VBox searchButtonVBox = new VBox(10); // set spacing between these nodes to 10
 
@@ -192,7 +195,7 @@ public class Project_Viewer {
         
         // Choice box drop down menu
         assessmentClassChoiceBox = new ChoiceBox<>();
-        assessmentClassChoiceBox.setPrefWidth(120);
+        assessmentClassChoiceBox.setPrefWidth(200);
 
         // Creating Search and clear buttons
         HBox buttons = new HBox(10);    // set spacing between these nodes to 10
