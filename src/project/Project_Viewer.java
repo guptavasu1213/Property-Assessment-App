@@ -135,6 +135,26 @@ public class Project_Viewer {
         table.setItems(data);
         
     }
+    
+    public void setUpButtons(HBox buttons){
+        VBox searchButtonVBox = new VBox(10); // set spacing between these nodes to 10
+
+        searchButton = new Button();
+        searchButton.setText("Search");
+        searchButtonVBox.setAlignment(Pos.CENTER_LEFT);
+        searchButtonVBox.getChildren().addAll(searchButton);
+        
+        
+        VBox clearButtonVBox = new VBox(10); // set spacing between these nodes to 10
+
+        clearButton = new Button();
+        clearButton.setText("Clear");
+        clearButtonVBox.setAlignment(Pos.CENTER_LEFT);
+        clearButtonVBox.getChildren().addAll(clearButton);
+
+        buttons.setAlignment(Pos.BASELINE_LEFT);
+        buttons.getChildren().addAll(searchButtonVBox, clearButtonVBox);        
+    }
     /**
      * Sets up the LHS of the GUI by creating search fields, buttons and labels.
      */
@@ -162,7 +182,7 @@ public class Project_Viewer {
         // Label for Neighbourhood name
         Label neighLabel = new Label("Neighbourhood");
         neighLabel.setFont(new Font("Ariel",15));
-
+        
         // Text field for neighbourhood user input
         neighField = new TextField();
 
@@ -174,12 +194,10 @@ public class Project_Viewer {
         assessmentClassChoiceBox = new ChoiceBox<>();
         assessmentClassChoiceBox.setPrefWidth(120);
 
-        searchButton = new Button();
-        searchButton.setText("Search");
-
-        clearButton = new Button();
-        clearButton.setText("Clear");
-
+        // Creating Search and clear buttons
+        HBox buttons = new HBox(10);    // set spacing between these nodes to 10
+        setUpButtons(buttons); // Sets up Search and Clear button
+        
         // Label for Stats
         Label statsHeadingLabel = new Label("Edmonton Property Assessments");
         statsHeadingLabel.setFont(new Font("Ariel", 13));
@@ -195,8 +213,7 @@ public class Project_Viewer {
         SearchVBox.setAlignment(Pos.CENTER_LEFT);
         SearchVBox.getChildren().addAll(assessmentLabel, accNumLabel, 
                 accNumField, addressLabel, addressField, neighLabel, neighField,
-                assessmentClassLabel, assessmentClassChoiceBox, searchButton, 
-                clearButton, statsHeadingLabel, statsLabel
+                assessmentClassLabel, assessmentClassChoiceBox, buttons, statsHeadingLabel, statsLabel
                 );   
     }
     /**
