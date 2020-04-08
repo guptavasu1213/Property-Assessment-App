@@ -1,15 +1,19 @@
 package project;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.nio.file.Paths;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * This class creates a list of records found from a .csv file.
@@ -17,7 +21,7 @@ import java.util.Scanner;
  * Allows the calculation of statistics.
  * @author vasug
  */
-public class PropertyAssessments {
+public final class PropertyAssessments {
     private List<Record> records = new ArrayList<>();
     private ArrayList<String> assessmentClasses = new ArrayList<>();
 
@@ -27,40 +31,59 @@ public class PropertyAssessments {
      * records
      * @param fileName File name of the .csv file
      */
-    public PropertyAssessments(String fileName){
-        Scanner csvReader = null;
-        try {
-            csvReader = new Scanner(Paths.get(fileName));
-        } catch (IOException ex) {
-            System.out.println("\nFile Not Found.\nProgram Terminated.\n");
-            System.exit(1); // Terminate program
-        }
+    public PropertyAssessments(){
+        BufferedReader buffer = null;
 
-        // Setting up the records
-        // Skipping the header for the file
-        if (csvReader.hasNextLine()){
-            csvReader.nextLine();
-        }
-        
-        // Iterating through each record
-        while (csvReader.hasNextLine()){
-            csvReader.useDelimiter(",|\\r"); // Two delimiters- "," and "\r" 
-            // Creating a new record 
-            Record temp = new Record(getLong(csvReader), getString(csvReader), 
-                    getInt(csvReader), getString(csvReader), getLong(csvReader), 
-                    getAssessmentClassString(csvReader), getInt(csvReader), 
-                    getString(csvReader),
-                    getString(csvReader), getString(csvReader), 
-                    getBigDecimal(csvReader), getBigDecimal(csvReader));
-            
-            if (temp.isEmpty()){ // When all attributes of temp are not null
-                csvReader.nextLine();
-                continue;
+        try {
+            URL url = new URL("https://data.edmonton.ca/resource/q7d6-ambg.csv");
+            URLConnection connection = url.openConnection();            
+            InputStreamReader input = new InputStreamReader(connection.getInputStream());
+
+            String line = "";
+            String csvSplitBy = ",";
+
+            buffer = new BufferedReader(input);
+            buffer.readLine(); // Skipping the header of the csv
+            while ((line = buffer.readLine()) != null) {
+                String[] room = line.split(csvSplitBy);
+                for (int i = 0; i < room.length; i++) {
+                    System.out.print("i: " + i + "  -" + room[i] + "-\t");                
+                }
+                System.out.println("");
+                // Creating a new record 
+                Record temp = new Record(getLong(sanitizeInput(room[0])), 
+                        getString(sanitizeInput(room[1])), 
+                        getInt(sanitizeInput(room[2])), 
+                        getString(sanitizeInput(room[3])), 
+                        getLong(sanitizeInput(room[4])), 
+                        getAssessmentClassString(sanitizeInput(room[5])), 
+                        getInt(sanitizeInput(room[6])), 
+                        getString(sanitizeInput(room[7])),
+                        getString(sanitizeInput(room[8])), 
+                        getString(sanitizeInput(room[9])), 
+                        getBigDecimal(sanitizeInput(room[10])), 
+                        getBigDecimal(sanitizeInput(room[11])));
+                
+                if (temp.isEmpty()){ // When all attributes of temp are not null
+                    continue;
+                }
+                records.add(temp);
             }
-            records.add(temp);
-            csvReader.nextLine(); // Skips over the "\r\n" at the end of each line
+        } catch (MalformedURLException e) {
+            System.out.println("Invalid URL");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (buffer != null) {
+                try {
+                    buffer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        csvReader.close();
     }
             
     /**
@@ -75,15 +98,27 @@ public class PropertyAssessments {
     public List<String> getAssessmentClasses(){
         return assessmentClasses;
     }
-
+    /**
+     * The String is santized and the relevant part is extracted from it.
+     * The source strings are of the form """", meaning they have double
+     * quotes in the strings.
+     * @param tmpStr The string to be sanitized
+     * @return The string value after santization
+     */
+    private String sanitizeInput(String tmpStr){
+        tmpStr = tmpStr.trim();
+        if (tmpStr.equals("\"\"") || tmpStr.equals("")){ // Empty string
+            return "";
+        }
+        return tmpStr.substring(1, tmpStr.length()-1);
+    }
     /**
      * Getting the String value from the Scanner object
      * @param csvReader Scanner object
      * @return String value if the field has a valid string value; 
      * @return null if the field is empty
      */
-    public String getString(Scanner csvReader){
-        String tmpStr = csvReader.next().trim();
+    public String getString(String tmpStr){
         if (tmpStr.isEmpty()){
             return null;         
         }
@@ -95,12 +130,13 @@ public class PropertyAssessments {
      * @return Long value if the field has a valid long value; 
      * @return null if the field does not have a long value
      */
-    public Long getLong(Scanner csvReader){
-        if (csvReader.hasNextLong()){
-            return (csvReader.nextLong());
+    public Long getLong(String tmpStr){
+        
+        try {
+            return Long.parseLong(tmpStr);
+        } catch (Exception e) {
+            return null;
         }
-        csvReader.next(); // Ignoring the value
-        return null; 
     }
     /**
      * Getting the Integer value from the Scanner object
@@ -108,12 +144,12 @@ public class PropertyAssessments {
      * @return Integer value if the field has a valid Integer value;
      * @return null if the field does not have a long value
      */ 
-    public Integer getInt(Scanner csvReader){
-        if (csvReader.hasNextInt()){
-            return (csvReader.nextInt());
+    public Integer getInt(String tmpStr){
+        try {
+            return Integer.parseInt(tmpStr);
+        } catch (Exception e) {
+            return null;
         }
-        csvReader.next(); // Ignoring the value
-        return null; 
     }
     /**
      * Getting the BidDecimal value from the Scanner object
@@ -121,12 +157,12 @@ public class PropertyAssessments {
      * @return BigDecimal value if the field has a valid BigDecimalvalue;
      * @return null if the field does not have a long value
      */ 
-    public BigDecimal getBigDecimal(Scanner csvReader){
-        if (csvReader.hasNextBigDecimal()){
-            return (csvReader.nextBigDecimal());
+    public BigDecimal getBigDecimal(String tmpStr){
+        try {
+            return new BigDecimal(tmpStr);
+        } catch (Exception e) {
+            return null;
         }
-//        csvReader.next(); // Ignoring the value
-        return null; 
     }
     /**
      * Adds the assessment class to a list and returns the content read from the
@@ -134,8 +170,7 @@ public class PropertyAssessments {
      * @param csvReader
      * @return String storing the assessment class
      */
-    public String getAssessmentClassString(Scanner csvReader){
-        String tmpStr = csvReader.next().trim();
+    public String getAssessmentClassString(String tmpStr){
         if (tmpStr.isEmpty()){
             return null;         
         }

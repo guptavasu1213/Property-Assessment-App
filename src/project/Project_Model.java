@@ -19,8 +19,8 @@ public class Project_Model {
      * records
      * @param fileName File name of the .csv file
      */
-    public Project_Model(String fileName){
-        properties = new PropertyAssessments(fileName);
+    public Project_Model(){
+        properties = new PropertyAssessments();
     }
        
     /**
