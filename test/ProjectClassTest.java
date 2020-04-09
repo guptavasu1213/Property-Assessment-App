@@ -11,7 +11,7 @@ import project.PropertyAssessments;
 public class ProjectClassTest {
     private ArrayList<Long> vals = new ArrayList<>();
     
-    private PropertyAssessments proj = new PropertyAssessments("Property_Assessment_Data_2020.csv");
+    private PropertyAssessments proj = new PropertyAssessments();
     
     // Populating the array with own values
     @Before

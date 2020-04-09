@@ -2,6 +2,7 @@ package project;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,6 +36,29 @@ public class Project_Model {
     public List<String> getAssessmentClasses(){
         return properties.getAssessmentClasses();
     }
+    
+    public List<String> getWardList(List<Record> filteredRecords){
+        List<String> wardList = new ArrayList<>();
+        for (Record property : filteredRecords){
+            if (!wardList.contains( property.getNeighbourhoodInfo().getWardName())){
+                wardList.add(property.getNeighbourhoodInfo().getWardName());
+            }
+        }
+        return wardList;
+    }
+    
+    public Double getWardAssessmentMean(String wardName, List<Record> filteredRecords){
+        if (filteredRecords.size() == 0 ) return 0.0;
+        
+        Double sum = 0.0;
+        for (Record property : filteredRecords){
+            if (property.getNeighbourhoodInfo().getWardName().equalsIgnoreCase(wardName)){
+                sum += property.getAssessedValue();
+            }
+        }
+        return sum/filteredRecords.size();
+    }
+            
     /**
      * Facilitates the calculation of statistics of all the records and 
      * displaying them on the console 
