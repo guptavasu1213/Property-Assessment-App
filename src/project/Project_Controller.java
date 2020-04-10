@@ -2,8 +2,11 @@ package project;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 
@@ -188,7 +191,7 @@ public class Project_Controller {
             wardData.getData().add(new XYChart.Data<>(ward, mean));
         }
         return wardData;        
-    } 
+    }
     /**
      * 
      * @return 
@@ -205,11 +208,38 @@ public class Project_Controller {
         }
         return neighbourhoodData;        
     }
+    
+    private void addValuesToPieChart(long lowerLim, long upperLim, ObservableList<PieChart.Data> pieData){
+        Long count = model.countAssessedValuesBetweenRange(lowerLim, upperLim, visualizationTabList);
+        String key = "Between " + lowerLim + " and " + upperLim;
+        pieData.add(new PieChart.Data(key, count));
+    }
+    private void addValuesToPieChart(long upperLim, ObservableList<PieChart.Data> pieData){
+        Long count = model.countAssessedValuesBetweenRange(upperLim, Long.MAX_VALUE, visualizationTabList);
+        String key = "Above " + upperLim;
+        pieData.add(new PieChart.Data(key, count));
+    }
     /**
      * 
      */
-    private void getPieChartData(){
+    private ObservableList<PieChart.Data> getPieChartData(){
+        if (visualizationTabList == null){
+            return null;
+        }
+        ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
         
+        addValuesToPieChart(0, 30000, pieData);
+        addValuesToPieChart(30000, 70000, pieData);
+        addValuesToPieChart(70000, 120000, pieData);
+        addValuesToPieChart(120000, 200000, pieData);
+        addValuesToPieChart(200000, 500000, pieData);
+        addValuesToPieChart(500000, pieData);
+        
+        
+//        pieData.add(new PieChart.Data("IT", 20));
+//        pieData.add(new PieChart.Data("NIT", 10));
+//        pieData.add(new PieChart.Data("VIT", 10));
+        return pieData;
     }
         /**
      * The chart selected gets filled with data
@@ -220,7 +250,7 @@ public class Project_Controller {
         // Pie chart
             case 1:
                 System.out.println("Updating the pie chart");
-//                viewer.updatePieChart(getPieChartData());                
+                viewer.updatePieChart(getPieChartData());      
                 break;
         // Bar Chart
             case 2:
@@ -247,7 +277,7 @@ public class Project_Controller {
             public void handle(ActionEvent event) {
                 flagChartSelection = 1;                
                 System.out.println("Pie Chart selected");
-//                viewer.updatePieChart(getPieChartData()); // Updating the Pie Chart
+                viewer.updatePieChart(getPieChartData()); // Updating the Pie Chart
             }
         });
         // Bar Graph

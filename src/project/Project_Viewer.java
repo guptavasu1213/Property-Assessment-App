@@ -235,19 +235,27 @@ public class Project_Viewer {
     public void updateGUI(List<Record> records){
         data = FXCollections.observableArrayList(records);
         table.setItems(data);
-        
     }
     /**
      * 
      */
     public void createPieChart() {
-        
+        pieChartBorderPane = new BorderPane();
+        pieChart = new PieChart();
+        pieChart.setTitle("Representation of the Range of Assessed Values");
+        pieChart.setPrefHeight(750);
+        pieChart.setPrefWidth(750);
+        pieChartBorderPane.setCenter(pieChart);
     }
     /**
      * 
      */
-    public void updatePieChart(){
-        
+    public void updatePieChart(ObservableList<PieChart.Data> data){
+        if (data == null) return;        
+        graphsVBox.getChildren().clear(); // Clearing the graph or label
+        pieChart.getData().clear();
+        pieChart.getData().addAll(data);
+        graphsVBox.getChildren().add(pieChartBorderPane);
     }
     /**
      * Creates the bar graph
@@ -308,7 +316,7 @@ public class Project_Viewer {
     private void createNothingToDisplayLabel(){
         // Label for Address
         nothingToDisplayLabel = new Label("Nothing to Display!");
-        nothingToDisplayLabel.setFont(new Font("Ariel",35));        
+        nothingToDisplayLabel.setFont(new Font("Ariel",35));   
     }    
     
     /**

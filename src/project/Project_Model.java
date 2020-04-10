@@ -36,7 +36,11 @@ public class Project_Model {
     public List<String> getAssessmentClasses(){
         return properties.getAssessmentClasses();
     }
-    
+    /**
+     * 
+     * @param filteredRecords
+     * @return 
+     */
     public List<String> getWardList(List<Record> filteredRecords){
         List<String> wardList = new ArrayList<>();
         for (Record property : filteredRecords){
@@ -77,6 +81,16 @@ public class Project_Model {
             }
         }
         return sum/filteredRecords.size();
+    }
+    public long countAssessedValuesBetweenRange(Long lowerLim, Long upperLim, 
+            List<Record> filteredRecords){
+        long count = 0;
+        for (Record property : filteredRecords){
+            if ((property.getAssessedValue() >= lowerLim) && (property.getAssessedValue() < upperLim)){
+                count++;
+            }
+        }        
+        return count;
     }
                         
     /**
