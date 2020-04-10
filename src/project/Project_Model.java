@@ -37,9 +37,9 @@ public class Project_Model {
         return properties.getAssessmentClasses();
     }
     /**
-     * 
-     * @param filteredRecords
-     * @return 
+     * Retrieving the names of all the wards in the data
+     * @param filteredRecords The records to search through
+     * @return The list of all ward names
      */
     public List<String> getWardList(List<Record> filteredRecords){
         List<String> wardList = new ArrayList<>();
@@ -50,7 +50,13 @@ public class Project_Model {
         }
         return wardList;
     }
-        public Double getWardAssessmentMean(String wardName, List<Record> filteredRecords){
+    /**
+     * Calculating the mean of all the assessment values in a given ward
+     * @param wardName The name of the ward
+     * @param filteredRecords The records to search through
+     * @return The mean of the assessment values
+     */
+    public Double getWardAssessmentMean(String wardName, List<Record> filteredRecords){
         if (filteredRecords.size() == 0 ) return 0.0;
         
         Double sum = 0.0;
@@ -61,7 +67,11 @@ public class Project_Model {
         }
         return sum/filteredRecords.size();
     }
-
+    /**
+     * The list of all neighbourhood names in the given dataset
+     * @param filteredRecords The data to look through
+     * @return A list of all neighbourhood names
+     */
     public List<String> getNeighbourhoodList(List<Record> filteredRecords){
         List<String> neighbourhoodList = new ArrayList<>();
         for (Record property : filteredRecords){
@@ -71,6 +81,12 @@ public class Project_Model {
         }
         return neighbourhoodList;
     }
+    /**
+     * The mean of the assessment values is calculated for a neighbourhood 
+     * @param neighName The name of the neighbourhood
+     * @param filteredRecords The records to search through
+     * @return The mean of the assessment values for a neighbourhood
+     */
     public Double getNeigbourhoodAssessmentMean(String neighName, List<Record> filteredRecords){
         if (filteredRecords.size() == 0 ) return 0.0;
         
@@ -82,6 +98,13 @@ public class Project_Model {
         }
         return sum/filteredRecords.size();
     }
+    /**
+     * Calculating the number of properties within a give range of assessed values
+     * @param lowerLim Lower limit of assessed value
+     * @param upperLim Upper Limit of assessed value
+     * @param filteredRecords The records to search through
+     * @return The number of properties within a give range of assessed values
+     */
     public long countAssessedValuesBetweenRange(Long lowerLim, Long upperLim, 
             List<Record> filteredRecords){
         long count = 0;

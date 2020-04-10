@@ -8,7 +8,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
-import javafx.stage.Stage;
 
 /**
  * Controller class acts as a middleman between the Model and the Viewer class
@@ -17,10 +16,9 @@ import javafx.stage.Stage;
 public class Project_Controller {
     private Project_Model model; // Stores data
     private Project_Viewer viewer; // Stores the UI of the app
-    private Stage primaryStage;
     
     private List<Record> visualizationTabList = null;
-    private int flagChartSelection = 1;
+    private int flagChartSelection = 1; // By default, a pie chart is selected
 
     /**
      * Constructor
@@ -42,7 +40,7 @@ public class Project_Controller {
         // Getting all the records stored in the model
         List<Record> records = model.getAllRecords();
         // Fills in the values of the table
-        viewer.updateGUI(records);
+        viewer.updateTable(records);
         // Sets up the assesment classes in the table by pulling out the classes
         // from the records in model
         viewer.setAssessmentClasses(getAssessmentClasses());
@@ -54,7 +52,7 @@ public class Project_Controller {
      */
     public void setTableEmpty(){
         viewer.setStatsLabel("No such record found");        
-        viewer.updateGUI(new ArrayList<Record>());
+        viewer.updateTable(new ArrayList<Record>());
     }
     /**
      * Looking up the records by Account number
@@ -109,7 +107,7 @@ public class Project_Controller {
             public void handle(ActionEvent event) {
                 List<Record> records = model.getAllRecords();
                 // Fills in the values of the table
-                viewer.updateGUI(records);
+                viewer.updateTable(records);
                 // Set the labels
                 viewer.setStatsLabel(model.findStats(records));
                 // Setting all the fields empty
@@ -141,10 +139,8 @@ public class Project_Controller {
         // When all fields are empty
         if (userAccNo.equals("") && userAddress.equals("")&& 
                 userNeighbourhood.equals("") && userAssClass == null){
-//            viewer.updateGUI(model.getAllRecords());
-//            viewer.setStatsLabel(model.findStats(model.getAllRecords()));
             System.out.println("All fields emptyy");
-            return new ArrayList<>();
+            return new ArrayList<>(); // Empty array list
         }
 
         // Search by Account number
@@ -208,19 +204,29 @@ public class Project_Controller {
         }
         return neighbourhoodData;        
     }
-    
+    /**
+     * Adding the values to the pie chart with a lower and upper bound
+     * @param lowerLim The lower bound of assessment values
+     * @param upperLim The upper bound of assessment values
+     * @param pieData The pie chart to add information into
+     */
     private void addValuesToPieChart(long lowerLim, long upperLim, ObservableList<PieChart.Data> pieData){
         Long count = model.countAssessedValuesBetweenRange(lowerLim, upperLim, visualizationTabList);
         String key = "Between " + lowerLim + " and " + upperLim;
         pieData.add(new PieChart.Data(key, count));
     }
-    private void addValuesToPieChart(long upperLim, ObservableList<PieChart.Data> pieData){
-        Long count = model.countAssessedValuesBetweenRange(upperLim, Long.MAX_VALUE, visualizationTabList);
-        String key = "Above " + upperLim;
+    /**
+     * Adding the values with a lower bound specified and upper bound infinite
+     * @param lowerLim The lower limit of the assessment value
+     * @param pieData The pie chart to add the information into
+     */
+    private void addValuesToPieChart(long lowerLim, ObservableList<PieChart.Data> pieData){
+        Long count = model.countAssessedValuesBetweenRange(lowerLim, Long.MAX_VALUE, visualizationTabList);
+        String key = "Above " + lowerLim;
         pieData.add(new PieChart.Data(key, count));
     }
     /**
-     * 
+     * Extracting the data of assessment values for the pie chart 
      */
     private ObservableList<PieChart.Data> getPieChartData(){
         if (visualizationTabList == null){
@@ -235,14 +241,10 @@ public class Project_Controller {
         addValuesToPieChart(200000, 500000, pieData);
         addValuesToPieChart(500000, pieData);
         
-        
-//        pieData.add(new PieChart.Data("IT", 20));
-//        pieData.add(new PieChart.Data("NIT", 10));
-//        pieData.add(new PieChart.Data("VIT", 10));
         return pieData;
     }
-        /**
-     * The chart selected gets filled with data
+    /**
+     * The chart selected gets filled with data and gets updated
      * @param records 
      */
     public void setChartWithData(){
@@ -268,7 +270,8 @@ public class Project_Controller {
         }
     }
     /**
-     * 
+     * Setting the event handlers for Pie Chart button, Bar graph button, and
+     * Scatter plot button
      */
     private void setChartsEvent(){        
         // Pie Chart
@@ -317,7 +320,7 @@ public class Project_Controller {
                 // When all fields are empty
                 if (userAccNo.equals("") && userAddress.equals("")&& 
                         userNeighbourhood.equals("") && userAssClass == null){
-                    viewer.updateGUI(model.getAllRecords());
+                    viewer.updateTable(model.getAllRecords());
                     viewer.setStatsLabel(model.findStats(model.getAllRecords()));
                     System.out.println("All fields empty");
                     return;
@@ -358,7 +361,7 @@ public class Project_Controller {
                 }
                 else { // Updating the table and the stats on data
                     viewer.setStatsLabel(model.findStats(finalList));
-                    viewer.updateGUI(finalList);
+                    viewer.updateTable(finalList);
                 }
             }
         });

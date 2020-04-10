@@ -27,13 +27,13 @@ public final class PropertyAssessments {
 
     /**
      * Constructor for the class
-     * Gets the contents from the given .csv file and import them into a list of
-     * records
-     * @param fileName File name of the .csv file
+     * Gets the contents of property assessment values from the Socrata Open Data API
+     * in the form of a Csv file and parsing it accordingly and storing it into
+     * the class.
      */
     public PropertyAssessments(){
         BufferedReader buffer = null;
-
+        // Connecting to the API
         try {
             URL url = new URL("https://data.edmonton.ca/resource/q7d6-ambg.csv");
             URLConnection connection = url.openConnection();            

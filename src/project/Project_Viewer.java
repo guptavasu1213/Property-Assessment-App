@@ -86,31 +86,27 @@ public class Project_Viewer {
     private Button scatterPlotButton;
     
     private VBox graphsVBox; // Stores graph or the Invalid label
-    
-    private Label nothingToDisplayLabel;
-    
+        
     private VBox visualizationVBox;
             
     private HBox tableViewTabScreenHBox; // For holding LHS and RHS
-    private HBox visualizationTabHBox;
-
-    private Scene scene;
-                    
-    private Stage primaryStage;
+    private HBox visualizationTabHBox; // For holding LHS and RHS
     
-    //==
+    private Label nothingToDisplayLabel;
+    
+    //==Pie Chart
     private PieChart pieChart;
     private BorderPane pieChartBorderPane;
-    //==
-    //== Bar chart
+    //== Bar Chart
     private BarChart barChart;
     private BorderPane barGraphBorderPane;
-    //==
-    
-    //== Scatter chart
+    //== Scatter Chart
     private ScatterChart scatterChart;
     private BorderPane scatterPlotBorderPane;
-    //==
+
+    private Scene scene;
+    private Stage primaryStage;
+    
     /**
      * Constructor for the class. Sets the primary stage for the JavaFx Application
      * Sets up the GUI with the left hand side with search fields and
@@ -184,21 +180,38 @@ public class Project_Viewer {
     public Button getTableSearchButton(){
         return searchButtonTab;
     }
-
+    /**
+     * Getting the button for Pie Chart in visualization tab
+     * @return Pie chart button
+     */
     public Button getPieChartButton() {
         return pieChartButton;
     }
-
+    /**
+     * Get the button for bar graph for in visualization tab
+     * @return bar graph button
+     */
     public Button getBarGraphButton() {
         return barGraphButton;
     }
-
+    /**
+     * Get the button for scatter plot for in visualization tab
+     * @return 
+     */
     public Button getScatterPlotButton() {
         return scatterPlotButton;
     }
+    /**
+     * Get search button on the left hand side for the visualization tab
+     * @return Search button
+     */
     public Button getVisualSearchButton(){
         return searchButtonVis;
     }
+    /**
+     * Get clear button on the left hand side for the visualization tab
+     * @return Clear button
+     */
     public Button getVisualClearButton(){
         return clearButtonVis;
     }
@@ -218,7 +231,6 @@ public class Project_Viewer {
         neighFieldVis.setText("");
         assessmentClassChoiceBoxVis.setValue(null);
     }
-
     /**
      * Sets all the fields to empty values
      */
@@ -232,12 +244,12 @@ public class Project_Viewer {
      * Update the table on the RHS in the GUI with the value in records
      * @param records Value(s) to be filled in the table
      */
-    public void updateGUI(List<Record> records){
+    public void updateTable(List<Record> records){
         data = FXCollections.observableArrayList(records);
         table.setItems(data);
     }
     /**
-     * 
+     * Creating the pie chart without any values
      */
     public void createPieChart() {
         pieChartBorderPane = new BorderPane();
@@ -248,7 +260,7 @@ public class Project_Viewer {
         pieChartBorderPane.setCenter(pieChart);
     }
     /**
-     * 
+     * Update the pie chart with the values passed
      */
     public void updatePieChart(ObservableList<PieChart.Data> data){
         if (data == null) return;        
@@ -258,7 +270,7 @@ public class Project_Viewer {
         graphsVBox.getChildren().add(pieChartBorderPane);
     }
     /**
-     * Creates the bar graph
+     * Creates the bar graph without adding any values to it
      */
     public void createBarGraph(){
         barGraphBorderPane = new BorderPane();
@@ -270,6 +282,9 @@ public class Project_Viewer {
         yAxis.setLabel("Assessment Values");
         // Create Bar chart
         barChart = new BarChart(xAxis, yAxis);
+        barChart.setPrefHeight(750);
+        barChart.setPrefWidth(750);
+        barChart.setTitle("Average assessment value of properties per ward");
         // Adding the data to the Bar Chart
         barGraphBorderPane.setCenter(barChart);
     }
@@ -285,7 +300,7 @@ public class Project_Viewer {
         graphsVBox.getChildren().add(barGraphBorderPane);
     }
     /**
-     * 
+     * Creates the scatter plot without adding any values to it
      */
     public void createScatterPlot(){
         scatterPlotBorderPane = new BorderPane();        
@@ -298,10 +313,13 @@ public class Project_Viewer {
         yAxis.setLabel("Assessment Values");
         // Create Scatter Plot chart
         scatterChart = new ScatterChart(xAxis, yAxis);
+        scatterChart.setPrefHeight(750);
+        scatterChart.setPrefWidth(750); 
+        scatterChart.setTitle("Average assessment value of properties per neighbourhood");
         scatterPlotBorderPane.setCenter(scatterChart);
     }
     /**
-     * 
+     * Updates the scatter plot with the values passed to it
      */
     public void updateScatterPlot(XYChart.Series<String, Number> data){
         if (data == null) return;
@@ -311,16 +329,15 @@ public class Project_Viewer {
         graphsVBox.getChildren().add(scatterPlotBorderPane);
     }
     /**
-     * 
+     * Creating the label for the Visualization tab when there is no graph available
      */
     private void createNothingToDisplayLabel(){
         // Label for Address
         nothingToDisplayLabel = new Label("Nothing to Display!");
         nothingToDisplayLabel.setFont(new Font("Ariel",35));   
-    }    
-    
+    }
     /**
-     * 
+     * Displaying the label by getting rid of the graph in the VBox
      */
     public void displayNothingToDisplayLabel(){
         graphsVBox.getChildren().clear();
@@ -470,7 +487,7 @@ public class Project_Viewer {
         tableViewTab.setContent(tableViewTabScreenHBox);
     }
     /**
-     * 
+     * LHS tab for Search Box for Visualization Tab is created here
      */
     private void setUpSearchBoxVisual(){
         visualizationSearchVBox = new VBox(10);    // set spacing between these nodes to 10
@@ -519,7 +536,8 @@ public class Project_Viewer {
                 );
     }
     /**
-     * 
+     * Setting up Buttons on the RHS for Calculating Pie chart, Bar graph and 
+     * scatter plot
      */
     private HBox setUpVisualizationMethodButtons(){
         HBox visualizationMethodsHbox = new HBox(20);
@@ -540,9 +558,8 @@ public class Project_Viewer {
         visualizationMethodsHbox.getChildren().addAll(pieChartButton, barGraphButton, scatterPlotButton);
         return visualizationMethodsHbox;        
     }
-    
     /**
-     * RHS of visualization tab
+     * RHS of visualization tab for Displaying the buttons and the graphs
      * @param statsHeadingLabel 
      */
     private void setUpVisualizationGUI(Label statsHeadingLabel){
@@ -559,23 +576,19 @@ public class Project_Viewer {
         visualizationTabHBox.getChildren().addAll(visualizationSearchVBox, visualizationVBox); 
         
         // Initializing the graphs and labels
-        createBarGraph(); 
-        
         createNothingToDisplayLabel();
-        
         createPieChart();
-        
+        createBarGraph();        
         createScatterPlot();
-
     }
     /**
-     * Design of Visualization Tab
+     * Design of Visualization Tab (Both LHS and RHS)
      */
     private void setUpVisualizationTab(){
         visualizationTabHBox = new HBox(50);     // creating a horizontal container
 
         // Label for Stats- For RHS
-        Label statsHeadingLabel = new Label("Showing Stats in Visual Form");
+        Label statsHeadingLabel = new Label("Displaying statistics for Property Assessment Value ");
         statsHeadingLabel.setFont(new Font("Ariel", 20));
         
         // Left hand side- Search Box
@@ -588,7 +601,7 @@ public class Project_Viewer {
         visualizationTab.setContent(visualizationTabHBox);
     }
     /**
-     * 
+     * Creating Table View tab and Visualization tab
      */
     private void createTabs(){
         // Creating pane for all the tabs
@@ -628,13 +641,12 @@ public class Project_Viewer {
         setUpVisualizationTab();        
         
         // Setting the scene
-//        scene = new Scene(tableViewTabScreenHBox, 1350, 800);
+        scene = new Scene(tableViewTabScreenHBox, 1350, 900);
         scene = new Scene(root);
         primaryStage.setScene(scene);
-        primaryStage.setMaximized(true);
+//        primaryStage.setMaximized(true);
         primaryStage.show();
     }
-        
     /** 
      * Creating the table, set up columns, and specify the attributes to use
      * from the records.
@@ -661,20 +673,20 @@ public class Project_Viewer {
         
 
         TableColumn neighbourhood = new TableColumn("Neighbourhood");
-        neighbourhood.setMinWidth(150);
+        neighbourhood.setMinWidth(200);
         neighbourhood.setCellValueFactory(new PropertyValueFactory("neighbourhoodInfo"));
 
         TableColumn latitude = new TableColumn("Latitude");
-        latitude.setMinWidth(100);
+        latitude.setMinWidth(150);
         latitude.setCellValueFactory(new PropertyValueFactory("latitude"));
 
         TableColumn longitude = new TableColumn("Longitude");
-        longitude.setMinWidth(100);
+        longitude.setMinWidth(150);
         longitude.setCellValueFactory(new PropertyValueFactory("longitude"));
 
         table = new TableView<>();
         table.setEditable(false);
-        table.setPrefSize(1600, 1500);
+        table.setPrefSize(1500, 900);
         table.getColumns().addAll(account, address, assessed_val, assessment_class, neighbourhood, latitude, longitude);
         table.setItems(data);
     }

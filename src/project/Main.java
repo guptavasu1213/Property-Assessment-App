@@ -27,6 +27,7 @@ public class Main extends Application {
         controller = new Project_Controller(model, viewer);
         // Showing all the records from the model to the tables in the viewer GUI
         controller.displayAllRecords();
+        controller.setChartWithData();
     }
 
     /**
