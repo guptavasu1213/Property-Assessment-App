@@ -126,15 +126,15 @@ public class Project_Controller {
     }
     /**
      * Based on the filters and the fields filled, the list of records is returned
+     * @param userAccNo text stored in account number text field
+     * @param userAddress the text stored in Address text field
+     * @param userAssClass the text stored in assessment class selected from the drop down
+     * @param userNeighbourhood Gets the text in neighbourhood text field
      * @return 
      */
-    private List<Record> getFilteredList(){
+    private List<Record> getFilteredList(String userAccNo, String userAddress, String userAssClass,
+            String userNeighbourhood){
         List<Record> finalList = null; // Stores the records passing all filters
-
-        String userAccNo = viewer.getAccNumVis(); // Gets the text in account number text field
-        String userAddress = viewer.getAddressVis(); // Gets the text in Address text field
-        String userAssClass =  viewer.getAssessmentClassVis(); // Gets the assessment class selected from the drop down
-        String userNeighbourhood = viewer.getNeighbourhoodVis(); // Gets the text in neighbourhood text field
 
         // When all fields are empty
         if (userAccNo.equals("") && userAddress.equals("")&& 
@@ -142,7 +142,6 @@ public class Project_Controller {
             System.out.println("All fields emptyy");
             return new ArrayList<>(); // Empty array list
         }
-
         // Search by Account number
         if (!userAccNo.equals("")){ 
             finalList = searchByAccNo(userAccNo);
@@ -189,7 +188,7 @@ public class Project_Controller {
         return wardData;        
     }
     /**
-     * 
+     * Takes the filtered list and gathers data for the scatter plot
      * @return 
      */
     private XYChart.Series<String, Number> getScatterPlotData(){
@@ -310,54 +309,18 @@ public class Project_Controller {
         viewer.getTableSearchButton().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                List<Record> finalList = null; // Stores the records passing all filters
-                
-                String userAccNo = viewer.getAccNum(); // Gets the text in account number text field
-                String userAddress = viewer.getAddress(); // Gets the text in Address text field
-                String userAssClass =  viewer.getAssessmentClass(); // Gets the assessment class selected from the drop down
-                String userNeighbourhood = viewer.getNeighbourhood(); // Gets the text in neighbourhood text field
-                
-                // When all fields are empty
-                if (userAccNo.equals("") && userAddress.equals("")&& 
-                        userNeighbourhood.equals("") && userAssClass == null){
-                    viewer.updateTable(model.getAllRecords());
-                    viewer.setStatsLabel(model.findStats(model.getAllRecords()));
-                    System.out.println("All fields empty");
-                    return;
-                }
-                
-                // Search by Account number
-                if (!userAccNo.equals("")){ 
-                    finalList = searchByAccNo(userAccNo);
-                    if (finalList == null){return;}
-                }
-                // Search by Address
-                if (!userAddress.equals("")){ 
-                    finalList = model.findByAddress(userAddress, finalList);
-                    if (finalList == null){
-                        setTableEmpty();
-                        return;
-                    }
-                }
-                // Search by neighbourhood
-                if (!userNeighbourhood.equals("")){ 
-                    finalList = model.findByNeighbourhood(userNeighbourhood, finalList);
-                    if (finalList == null){
-                        setTableEmpty();
-                        return;
-                    }
-                }
-                // Search by Assessment Class
-                if (userAssClass != null){ 
-                    finalList = model.findByAssessmentClass(userAssClass, finalList);
-                    if (finalList == null){
-                        setTableEmpty();
-                        return;
-                    }
-                }                
+                System.out.println("Table View Tab search button pressed");
+
+                List<Record> finalList = getFilteredList(viewer.getAccNum(),
+                        viewer.getAddress(), viewer.getAssessmentClass(), 
+                        viewer.getNeighbourhood()); // Stores the records passing all filters
                 // When there is no such record
                 if (finalList == null){
                     setTableEmpty();
+                }
+                else if (finalList.size() == 0){
+                    viewer.updateTable(model.getAllRecords());
+                    viewer.setStatsLabel(model.findStats(model.getAllRecords()));                    
                 }
                 else { // Updating the table and the stats on data
                     viewer.setStatsLabel(model.findStats(finalList));
@@ -368,8 +331,11 @@ public class Project_Controller {
         viewer.getVisualSearchButton().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("asas");
-                visualizationTabList = getFilteredList();
+                System.out.println("Visualization Tab search button pressed");
+                
+                visualizationTabList = getFilteredList(viewer.getAccNumVis(), 
+                        viewer.getAddressVis(), viewer.getAssessmentClassVis(), 
+                        viewer.getNeighbourhoodVis());
                 // When there is no such record
                 if (visualizationTabList == null){
                     viewer.displayNothingToDisplayLabel();
@@ -383,7 +349,6 @@ public class Project_Controller {
                     // Set the chart selected with the filtered data
                     setChartWithData();
                 }
-                
             }
         });
     }

@@ -48,29 +48,16 @@ public class Project_Viewer {
     private VBox tableViewSearchVBox; // LHS
     private VBox tableVBox;  // RHS
     
-    //== Table Tab Search Box components
-    private Label statsLabelTab;
-    private Label assessmentLabelTab;
-    private Label accNumLabelTab;
-    private Label addressLabelTab;
-    private Label neighLabelTab;
-    private Label assessmentClassLabelTab;
+    //== Table Tab Search Box components=====
+    private Label statsLabelTab; // Stores the stats of all properties
     private HBox buttonsTab;
-    private Label statsHeadingLabelTab;
     private TextField accNumFieldTab;
     private TextField addressFieldTab;
     private TextField neighFieldTab;
     private ChoiceBox<String> assessmentClassChoiceBoxTab;
     private Button searchButtonTab;
-    private Button clearButtonTab;    
-    //===
+    private Button clearButtonTab;
 
-    //== Table Tab Search Box components
-    private Label assessmentLabelVis;
-    private Label accNumLabelVis;
-    private Label addressLabelVis;
-    private Label neighLabelVis;
-    private Label assessmentClassLabelVis;
     private HBox buttonsVis;
     private TextField accNumFieldVis;
     private TextField addressFieldVis;
@@ -78,9 +65,9 @@ public class Project_Viewer {
     private ChoiceBox<String> assessmentClassChoiceBoxVis;
     private Button searchButtonVis;
     private Button clearButtonVis;    
-    //===
+    //======================================
 
-    // For Visualization Tab
+    // For Visualization Tab================
     private Button pieChartButton;
     private Button barGraphButton;
     private Button scatterPlotButton;
@@ -103,7 +90,8 @@ public class Project_Viewer {
     //== Scatter Chart
     private ScatterChart scatterChart;
     private BorderPane scatterPlotBorderPane;
-
+    //======================================
+    
     private Scene scene;
     private Stage primaryStage;
     
@@ -397,31 +385,31 @@ public class Project_Viewer {
         tableViewSearchVBox.setPadding(new Insets(0, 0, 0, 10)); // Add padding to the left
         
         // Label for search Vbox
-        assessmentLabelTab = new Label("Find Property Assessment");
+        Label assessmentLabelTab = new Label("Find Property Assessment");
         assessmentLabelTab.setFont(new Font("Ariel",20));
     
         // Label for Account Number
-        accNumLabelTab = new Label("Account Number");
+        Label accNumLabelTab = new Label("Account Number");
         accNumLabelTab.setFont(new Font("Ariel",15));
 
         // Text field for account number user input
         accNumFieldTab = new TextField();
         
         // Label for Address
-        addressLabelTab = new Label("Address");
+        Label addressLabelTab = new Label("Address");
         addressLabelTab.setFont(new Font("Ariel",15));
         // Text field for address user input
         addressFieldTab = new TextField();
 
         // Label for Neighbourhood name
-        neighLabelTab = new Label("Neighbourhood");
+        Label neighLabelTab = new Label("Neighbourhood");
         neighLabelTab.setFont(new Font("Ariel",15));
         
         // Text field for neighbourhood user input
         neighFieldTab = new TextField();
 
         // Label for Assessment class
-        assessmentClassLabelTab = new Label("Assessment class");
+        Label assessmentClassLabelTab = new Label("Assessment class");
         assessmentClassLabelTab.setFont(new Font("Ariel", 15));
         
         // Choice box drop down menu
@@ -433,7 +421,7 @@ public class Project_Viewer {
         setUpButtonsTable(buttonsTab); // Sets up Search and Clear button
         
         // Label for Stats
-        statsHeadingLabelTab = new Label("Edmonton Property Assessments");
+        Label statsHeadingLabelTab = new Label("Edmonton Property Assessments");
         statsHeadingLabelTab.setFont(new Font("Ariel", 13));
 
         // Label for Stats
@@ -494,31 +482,31 @@ public class Project_Viewer {
         visualizationSearchVBox.setPadding(new Insets(0, 0, 0, 10)); // Add padding to the left
         
         // Label for search Vbox
-        assessmentLabelVis = new Label("Find Property Assessment");
+        Label assessmentLabelVis = new Label("Find Property Assessment");
         assessmentLabelVis.setFont(new Font("Ariel",20));
     
         // Label for Account Number
-        accNumLabelVis = new Label("Account Number");
+        Label accNumLabelVis = new Label("Account Number");
         accNumLabelVis.setFont(new Font("Ariel",15));
 
         // Text field for account number user input
         accNumFieldVis = new TextField();
         
         // Label for Address
-        addressLabelVis = new Label("Address");
+        Label addressLabelVis = new Label("Address");
         addressLabelVis.setFont(new Font("Ariel",15));
         // Text field for address user input
         addressFieldVis = new TextField();
 
         // Label for Neighbourhood name
-        neighLabelVis = new Label("Neighbourhood");
+        Label neighLabelVis = new Label("Neighbourhood");
         neighLabelVis.setFont(new Font("Ariel",15));
         
         // Text field for neighbourhood user input
         neighFieldVis = new TextField();
 
         // Label for Assessment class
-        assessmentClassLabelVis = new Label("Assessment class");
+        Label assessmentClassLabelVis = new Label("Assessment class");
         assessmentClassLabelVis.setFont(new Font("Ariel", 15));
         
         // Choice box drop down menu
@@ -544,15 +532,12 @@ public class Project_Viewer {
         
         pieChartButton = new Button();
         pieChartButton.setText("View Pie Chart");
-//        pieChartButton.setPadding(new Insets(30, 0, 0, 0)); // Add padding on the top
         
         barGraphButton = new Button();
         barGraphButton.setText("View Bar Graph");
-//        barGraphButton.setPadding(new Insets(10, 0, 0, 0)); // Add padding on the top
         
         scatterPlotButton = new Button();
         scatterPlotButton.setText("View Scatter Plot");
-//        scatterPlotButton.setPadding(new Insets(10, 0, 0, 0)); // Add padding on the top
         visualizationMethodsHbox.setAlignment(Pos.BASELINE_LEFT);
         // Adding the SearchBox and the visualization box to the Screen
         visualizationMethodsHbox.getChildren().addAll(pieChartButton, barGraphButton, scatterPlotButton);
