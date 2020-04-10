@@ -10,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -83,6 +85,9 @@ public class Project_Viewer {
     private Button barGraphButton;
     private Button scatterPlotButton;
     
+    private VBox graphsVBox; // Stores graph or the Invalid label
+    
+    private Label nothingToDisplayLabel;
     
     private VBox visualizationVBox;
             
@@ -93,9 +98,18 @@ public class Project_Viewer {
                     
     private Stage primaryStage;
     
+    //==
+    private PieChart pieChart;
+    private BorderPane pieChartBorderPane;
+    //==
     //== Bar chart
     private BarChart barChart;
     private BorderPane barGraphBorderPane;
+    //==
+    
+    //== Scatter chart
+    private ScatterChart scatterChart;
+    private BorderPane scatterPlotBorderPane;
     //==
     /**
      * Constructor for the class. Sets the primary stage for the JavaFx Application
@@ -226,7 +240,7 @@ public class Project_Viewer {
     /**
      * 
      */
-    public void createPieChart(){
+    public void createPieChart() {
         
     }
     /**
@@ -250,28 +264,59 @@ public class Project_Viewer {
         barChart = new BarChart(xAxis, yAxis);
         // Adding the data to the Bar Chart
         barGraphBorderPane.setCenter(barChart);
-        // Add it to the scene ############MAYBE MOVE THIS OUT
-        visualizationVBox.getChildren().add(barGraphBorderPane);
     }
     /**
      * Updates the bar graph based on the data given
      * @param data 
      */
     public void updateBarGraph(XYChart.Series<String, Number> data){
-        barChart.getData().clear();
-        barChart.getData().add(data);
+        if (data == null) return;
+        graphsVBox.getChildren().clear(); // Clearing the graph or label
+        barChart.getData().clear(); //Clear values in the bar chart
+        barChart.getData().add(data); // Add values to the bar chart
+        graphsVBox.getChildren().add(barGraphBorderPane);
     }
     /**
      * 
      */
     public void createScatterPlot(){
-        
+        scatterPlotBorderPane = new BorderPane();        
+        // X- Axis
+        CategoryAxis xAxis = new CategoryAxis();
+        xAxis.setTickLabelsVisible(false);
+        xAxis.setLabel("Neighbourhoods");
+        // Y-Axis
+        NumberAxis yAxis = new NumberAxis();
+        yAxis.setLabel("Assessment Values");
+        // Create Scatter Plot chart
+        scatterChart = new ScatterChart(xAxis, yAxis);
+        scatterPlotBorderPane.setCenter(scatterChart);
     }
     /**
      * 
      */
-    public void updateScatterPlot(){
-        
+    public void updateScatterPlot(XYChart.Series<String, Number> data){
+        if (data == null) return;
+        graphsVBox.getChildren().clear();
+        scatterChart.getData().clear();
+        scatterChart.getData().add(data);
+        graphsVBox.getChildren().add(scatterPlotBorderPane);
+    }
+    /**
+     * 
+     */
+    private void createNothingToDisplayLabel(){
+        // Label for Address
+        nothingToDisplayLabel = new Label("Nothing to Display!");
+        nothingToDisplayLabel.setFont(new Font("Ariel",35));        
+    }    
+    
+    /**
+     * 
+     */
+    public void displayNothingToDisplayLabel(){
+        graphsVBox.getChildren().clear();
+        graphsVBox.getChildren().add(nothingToDisplayLabel);        
     }
 
     /**
@@ -487,6 +532,7 @@ public class Project_Viewer {
         visualizationMethodsHbox.getChildren().addAll(pieChartButton, barGraphButton, scatterPlotButton);
         return visualizationMethodsHbox;        
     }
+    
     /**
      * RHS of visualization tab
      * @param statsHeadingLabel 
@@ -495,14 +541,24 @@ public class Project_Viewer {
         visualizationVBox = new VBox(30);
         
         HBox visualizationMethodsHbox = setUpVisualizationMethodButtons();
+
+        graphsVBox = new VBox(10); // Stores graphs in it
         
-        visualizationVBox.getChildren().addAll(statsHeadingLabel, visualizationMethodsHbox);
-        createBarGraph(); // ##########################MAYBE MOVE IT AROUND WHEN WE ADD MORE CHARTS
+        visualizationVBox.getChildren().addAll(statsHeadingLabel, visualizationMethodsHbox, graphsVBox);
         
         visualizationTabHBox.setAlignment(Pos.BASELINE_LEFT);
         // Adding the SearchBox and the visualization box to the Screen
         visualizationTabHBox.getChildren().addAll(visualizationSearchVBox, visualizationVBox); 
         
+        // Initializing the graphs and labels
+        createBarGraph(); 
+        
+        createNothingToDisplayLabel();
+        
+        createPieChart();
+        
+        createScatterPlot();
+
     }
     /**
      * Design of Visualization Tab

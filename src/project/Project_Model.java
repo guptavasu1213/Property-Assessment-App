@@ -46,8 +46,7 @@ public class Project_Model {
         }
         return wardList;
     }
-    
-    public Double getWardAssessmentMean(String wardName, List<Record> filteredRecords){
+        public Double getWardAssessmentMean(String wardName, List<Record> filteredRecords){
         if (filteredRecords.size() == 0 ) return 0.0;
         
         Double sum = 0.0;
@@ -58,7 +57,28 @@ public class Project_Model {
         }
         return sum/filteredRecords.size();
     }
-            
+
+    public List<String> getNeighbourhoodList(List<Record> filteredRecords){
+        List<String> neighbourhoodList = new ArrayList<>();
+        for (Record property : filteredRecords){
+            if (!neighbourhoodList.contains( property.getNeighbourhoodInfo().getName())){
+                neighbourhoodList.add(property.getNeighbourhoodInfo().getName());
+            }
+        }
+        return neighbourhoodList;
+    }
+    public Double getNeigbourhoodAssessmentMean(String neighName, List<Record> filteredRecords){
+        if (filteredRecords.size() == 0 ) return 0.0;
+        
+        Double sum = 0.0;
+        for (Record property : filteredRecords){
+            if (property.getNeighbourhoodInfo().getName().equalsIgnoreCase(neighName)){
+                sum += property.getAssessedValue();
+            }
+        }
+        return sum/filteredRecords.size();
+    }
+                        
     /**
      * Facilitates the calculation of statistics of all the records and 
      * displaying them on the console 

@@ -16,7 +16,7 @@ public class Project_Controller {
     private Project_Viewer viewer; // Stores the UI of the app
     private Stage primaryStage;
     
-    private List<Record> visualizationTabList;
+    private List<Record> visualizationTabList = null;
     private int flagChartSelection = 1;
 
     /**
@@ -30,6 +30,7 @@ public class Project_Controller {
         setSearchEvent(); // Sets the Listener for the search button in the viewer
         setClearEvent(); // Sets the Listener for the clear button in the viewer
         setChartsEvent(); // Sets event listener for Pie, Bar and Scatter Plot
+        visualizationTabList = model.getAllRecords(); // Initializing the visual list
     }
    /**
     * The Sets up the GUI, and adds the records from the model to the table in the GUI
@@ -115,11 +116,9 @@ public class Project_Controller {
         viewer.getVisualClearButton().setOnAction(new EventHandler<ActionEvent>() {
             @Override // Action for clearing everything
             public void handle(ActionEvent event) {
-//                List<Record> records = model.getAllRecords();
-//                // Set the labels
-//                viewer.setStatsLabel(model.findStats(records));
-                // Setting all the fields empty
                 viewer.resetAllVisFields();
+                visualizationTabList = model.getAllRecords();
+                setChartWithData();
             }
         });        
 
@@ -178,6 +177,10 @@ public class Project_Controller {
      * @return 
      */
     private XYChart.Series<String, Number> getBarGraphData(){
+        if (visualizationTabList == null){
+            return null;
+        }
+                
         List<String> wardList = model.getWardList(visualizationTabList);
         XYChart.Series<String, Number> wardData = new XYChart.Series<>();
         for (String ward : wardList) {
@@ -186,6 +189,28 @@ public class Project_Controller {
         }
         return wardData;        
     } 
+    /**
+     * 
+     * @return 
+     */
+    private XYChart.Series<String, Number> getScatterPlotData(){
+        if (visualizationTabList == null){
+            return null;
+        }                
+        List<String> neighbourhoodList = model.getNeighbourhoodList(visualizationTabList);
+        XYChart.Series<String, Number> neighbourhoodData = new XYChart.Series<>();
+        for (String neighbourhood : neighbourhoodList) {
+            Number mean = model.getNeigbourhoodAssessmentMean(neighbourhood, visualizationTabList);
+            neighbourhoodData.getData().add(new XYChart.Data<>(neighbourhood, mean));
+        }
+        return neighbourhoodData;        
+    }
+    /**
+     * 
+     */
+    private void getPieChartData(){
+        
+    }
         /**
      * The chart selected gets filled with data
      * @param records 
@@ -194,6 +219,8 @@ public class Project_Controller {
         switch (flagChartSelection) {
         // Pie chart
             case 1:
+                System.out.println("Updating the pie chart");
+//                viewer.updatePieChart(getPieChartData());                
                 break;
         // Bar Chart
             case 2:
@@ -205,16 +232,22 @@ public class Project_Controller {
                 break;
         // Scatter plot
             case 3:
+                System.out.println("Updating the scatter plot");
+                viewer.updateScatterPlot(getScatterPlotData());
                 break;
         }
     }
-    private void setChartsEvent(){
+    /**
+     * 
+     */
+    private void setChartsEvent(){        
         // Pie Chart
         viewer.getPieChartButton().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 flagChartSelection = 1;                
                 System.out.println("Pie Chart selected");
+//                viewer.updatePieChart(getPieChartData()); // Updating the Pie Chart
             }
         });
         // Bar Graph
@@ -233,6 +266,7 @@ public class Project_Controller {
             public void handle(ActionEvent event) {
                 flagChartSelection = 3;
                 System.out.println("Scatter plot selected");
+                viewer.updateScatterPlot(getScatterPlotData());
             }
         });
     }
@@ -305,8 +339,7 @@ public class Project_Controller {
                 visualizationTabList = getFilteredList();
                 // When there is no such record
                 if (visualizationTabList == null){
-                    // do something########
-                    // SET A LABEL and make the graph invisible
+                    viewer.displayNothingToDisplayLabel();
                 }
                 else if(visualizationTabList.size() == 0){ // When nothing is selected
                     System.out.println("Setting chart with entire dataset");
