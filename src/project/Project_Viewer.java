@@ -294,7 +294,6 @@ public class Project_Viewer {
         scatterPlotBorderPane = new BorderPane();        
         // X- Axis
         CategoryAxis xAxis = new CategoryAxis();
-        xAxis.setTickLabelsVisible(false);
         xAxis.setLabel("Neighbourhoods");
         // Y-Axis
         NumberAxis yAxis = new NumberAxis();
