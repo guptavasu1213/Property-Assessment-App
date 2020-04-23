@@ -7,6 +7,7 @@ The data is extracted via Socrata Open Data API (SODA) from the Edmonton Propert
 
 The property data is displayed in a tabular for and graphical form. 
 * The Table tab shows all the Edmonton property data. 
+<img src="https://github.com/guptavasu1213/property-assessment-app/blob/master/TableView.png" height="70%" width="70%" >
 * The Visualization tab has 3 different modes:
   * Viewing a Pie Chart: The pie chart represents the 6 groups of property assessment values. The 6 groups are as follows: $0 to $30000, $30000 to $70000, $70000 to $120000, $120000 to 200000, 200000 to 500000, and 500000 and above.
   * Viewing a Bar Chart: The bar chart represents all the wards and their average property assessment values. Each bar on the graph represents a ward.
